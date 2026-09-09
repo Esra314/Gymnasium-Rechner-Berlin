@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gymnasium Rechner Berlin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🏫 Gymnasium Rechner Berlin</h1>
+
+    <form id="rechnerForm">
+
+        <h2>Schülerdaten</h2>
+
+        <label>Vorname</label>
+        <input type="text" id="vorname" required>
+
+        <label>Nachname</label>
+        <input type="text" id="nachname" required>
+
+        <h2>5. Klasse (2. Halbjahr)</h2>
+
+        <div class="noten-grid">
+            <input type="number" id="deutsch5" placeholder="Deutsch" min="1" max="6" required>
+            <input type="number" id="mathe5" placeholder="Mathematik" min="1" max="6" required>
+            <input type="number" id="englisch5" placeholder="Englisch" min="1" max="6" required>
+            <input type="number" id="nawi5" placeholder="NaWi" min="1" max="6" required>
+            <input type="number" id="gewi5" placeholder="GeWi" min="1" max="6" required>
+            <input type="number" id="kunst5" placeholder="Kunst" min="1" max="6" required>
+            <input type="number" id="musik5" placeholder="Musik" min="1" max="6" required>
+            <input type="number" id="sport5" placeholder="Sport" min="1" max="6" required>
+        </div>
+
+        <h2>6. Klasse (1. Halbjahr)</h2>
+
+        <div class="noten-grid">
+            <input type="number" id="deutsch6" placeholder="Deutsch" min="1" max="6" required>
+            <input type="number" id="mathe6" placeholder="Mathematik" min="1" max="6" required>
+            <input type="number" id="englisch6" placeholder="Englisch" min="1" max="6" required>
+            <input type="number" id="nawi6" placeholder="NaWi" min="1" max="6" required>
+            <input type="number" id="gewi6" placeholder="GeWi" min="1" max="6" required>
+            <input type="number" id="kunst6" placeholder="Kunst" min="1" max="6" required>
+            <input type="number" id="musik6" placeholder="Musik" min="1" max="6" required>
+            <input type="number" id="sport6" placeholder="Sport" min="1" max="6" required>
+        </div>
+
+        <button type="submit">
+            Durchschnitt berechnen
+        </button>
+
+    </form>
+
+    <div id="ergebnis" class="ergebnis-box verborgen">
+        <h2>Ergebnis</h2>
+
+        <p>
+            👤 Schüler:
+            <strong id="schuelerName"></strong>
+        </p>
+
+        <p>
+            📊 Durchschnitt:
+            <strong id="durchschnitt"></strong>
+        </p>
+
+        <p>
+            📚 Hauptfachsumme:
+            <strong id="hauptfachsumme"></strong>
+        </p>
+
+        <p>
+            🎯 Empfehlung:
+            <strong id="empfehlung"></strong>
+        </p>
+    </div>
+
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
