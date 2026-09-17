@@ -64,7 +64,6 @@ document
     let empfehlung;
 
     if(
-        durchschnitt <= 2.2 &&
         hauptfachsumme <= 14
     ){
         empfehlung =
