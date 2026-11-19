@@ -412,14 +412,31 @@
             li.appendChild(info);
             li.appendChild(adresse);
 
+            var kontakt = document.createElement("div");
+            kontakt.className = "kontakt";
             if (s.w) {
                 var link = document.createElement("a");
                 link.href = /^https?:\/\//.test(s.w) ? s.w : "https://" + s.w;
                 link.target = "_blank";
                 link.rel = "noopener";
-                link.textContent = t("website");
-                li.appendChild(link);
+                link.textContent = "🌐 " + t("website");
+                kontakt.appendChild(link);
             }
+            if (s.t) {
+                var tel = document.createElement("a");
+                tel.href = "tel:" + s.t.replace(/[^+\d]/g, "");
+                tel.dir = "ltr";
+                tel.textContent = "☎ " + s.t;
+                kontakt.appendChild(tel);
+            }
+            if (s.e) {
+                var mail = document.createElement("a");
+                mail.href = "mailto:" + s.e;
+                mail.dir = "ltr";
+                mail.textContent = "✉ " + s.e;
+                kontakt.appendChild(mail);
+            }
+            li.appendChild(kontakt);
             liste.appendChild(li);
         });
 

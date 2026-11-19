@@ -89,6 +89,7 @@
             faq_q5: "Kann mein Kind auch an einer ISS oder Gemeinschaftsschule Abitur machen?",
             faq_a5: "Ja. Beide Schularten führen zum Abitur. Es dauert dort ein Jahr länger (nach Klasse 13), dafür gibt es mehr Zeit zum Lernen.",
             show_more: "Weitere Schulen anzeigen",
+            open_day_hint: "Tag der offenen Tür und Infoabende: bitte auf der Webseite der Schule prüfen.",
             footer_imprint: "Impressum",
             footer_privacy: "Datenschutz"
         },
@@ -163,6 +164,7 @@
             faq_q5: "Can my child also get the Abitur at an ISS or Gemeinschaftsschule?",
             faq_a5: "Yes. Both school types lead to the Abitur. It takes one year longer there (after grade 13), which gives more time to learn.",
             show_more: "Show more schools",
+            open_day_hint: "Open days and information evenings: please check the school's website.",
             footer_imprint: "Legal notice (Impressum)",
             footer_privacy: "Privacy policy (Datenschutz)"
         },
@@ -237,6 +239,7 @@
             faq_q5: "Çocuğum ISS'de veya Gemeinschaftsschule'de de Abitur yapabilir mi?",
             faq_a5: "Evet. İki okul türü de Abitur'a götürür. Orada bir yıl daha uzun sürer (13. sınıftan sonra), böylece öğrenmek için daha fazla zaman olur.",
             show_more: "Daha fazla okul göster",
+            open_day_hint: "Açık kapı günü ve bilgilendirme akşamları: lütfen okulun internet sitesinden kontrol edin.",
             footer_imprint: "Künye (Impressum)",
             footer_privacy: "Gizlilik (Datenschutz)"
         },
@@ -311,6 +314,7 @@
             faq_q5: "هل يمكن لطفلي الحصول على الـ Abitur في الـ ISS أو الـ Gemeinschaftsschule أيضاً؟",
             faq_a5: "نعم. كلا النوعين يؤديان إلى الـ Abitur. يستغرق الأمر هناك سنة إضافية (بعد الصف الثالث عشر)، مما يمنح وقتاً أطول للتعلم.",
             show_more: "عرض مزيد من المدارس",
+            open_day_hint: "يوم الأبواب المفتوحة وأمسيات المعلومات: يرجى التحقق من موقع المدرسة.",
             footer_imprint: "بيانات الناشر (Impressum)",
             footer_privacy: "حماية البيانات (Datenschutz)"
         },
@@ -385,6 +389,7 @@
             faq_q5: "Чи може моя дитина отримати Abitur також у ISS або Gemeinschaftsschule?",
             faq_a5: "Так. Обидва типи шкіл ведуть до Abitur. Там це триває на рік довше (після 13 класу), зате є більше часу на навчання.",
             show_more: "Показати більше шкіл",
+            open_day_hint: "День відкритих дверей та інформаційні вечори: будь ласка, перевірте на сайті школи.",
             footer_imprint: "Вихідні дані (Impressum)",
             footer_privacy: "Захист даних (Datenschutz)"
         },
@@ -459,6 +464,7 @@
             faq_q5: "Может ли мой ребёнок получить Abitur также в ISS или Gemeinschaftsschule?",
             faq_a5: "Да. Оба типа школ ведут к Abitur. Там это занимает на год больше (после 13 класса), зато больше времени на учёбу.",
             show_more: "Показать больше школ",
+            open_day_hint: "День открытых дверей и информационные вечера: пожалуйста, проверьте на сайте школы.",
             footer_imprint: "Выходные данные (Impressum)",
             footer_privacy: "Защита данных (Datenschutz)"
         }

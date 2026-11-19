@@ -91,6 +91,8 @@ const schulen = schulDaten.features
             z: p.plz,
             o: p.ortsteil || p.bezirk || "",
             w: p.internet || "",
+            t: p.telefon || "",
+            e: p.email || "",
             lat: runde(lat),
             lon: runde(lon)
         };
