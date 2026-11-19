@@ -106,18 +106,12 @@
 
     // ---------- Sprache ----------
 
+    // Standardsprache ist Deutsch. Eine andere Sprache nur über ?lang=… oder die Auswahl.
     function waehleStartsprache() {
         var codes = I18n.SPRACHEN.map(function (s) { return s.code; });
         var ausUrl = new URLSearchParams(window.location.search).get("lang");
         if (ausUrl && codes.indexOf(ausUrl) !== -1) {
             return ausUrl;
-        }
-        var browser = navigator.languages || [navigator.language || "de"];
-        for (var i = 0; i < browser.length; i++) {
-            var kurz = String(browser[i]).slice(0, 2).toLowerCase();
-            if (codes.indexOf(kurz) !== -1) {
-                return kurz;
-            }
         }
         return "de";
     }
@@ -128,6 +122,9 @@
         document.documentElement.lang = code;
         document.documentElement.dir = info ? info.dir : "ltr";
         spracheSelect.value = code;
+        document.querySelectorAll("#sprachChips button").forEach(function (b) {
+            b.setAttribute("aria-pressed", b.dataset.lang === code ? "true" : "false");
+        });
 
         document.querySelectorAll("[data-i18n]").forEach(function (el) {
             el.textContent = t(el.dataset.i18n);
@@ -162,6 +159,18 @@
             opt.textContent = s.name;
             opt.lang = s.code;
             spracheSelect.appendChild(opt);
+        });
+        var chips = document.getElementById("sprachChips");
+        I18n.SPRACHEN.forEach(function (s) {
+            var li = document.createElement("li");
+            var b = document.createElement("button");
+            b.type = "button";
+            b.lang = s.code;
+            b.dataset.lang = s.code;
+            b.textContent = s.name;
+            b.addEventListener("click", function () { setzeSprache(s.code); });
+            li.appendChild(b);
+            chips.appendChild(li);
         });
         spracheSelect.addEventListener("change", function () {
             setzeSprache(spracheSelect.value);

@@ -100,6 +100,7 @@
             tl_5: "Bescheid über den Schulplatz",
             tl_when_6: "nach den Sommerferien",
             tl_6: "Start in Klasse 7 an der neuen Schule",
+            lang_available: "Diese Seite gibt es in 6 Sprachen:",
             footer_imprint: "Impressum",
             footer_privacy: "Datenschutz"
         },
@@ -185,6 +186,7 @@
             tl_5: "Letter (Bescheid) about the school place",
             tl_when_6: "after the summer holidays",
             tl_6: "Start of grade 7 at the new school",
+            lang_available: "This page is available in 6 languages:",
             footer_imprint: "Legal notice (Impressum)",
             footer_privacy: "Privacy policy (Datenschutz)"
         },
@@ -270,6 +272,7 @@
             tl_5: "Okul yeri hakkında karar yazısı (Bescheid)",
             tl_when_6: "yaz tatilinden sonra",
             tl_6: "Yeni okulda 7. sınıf başlar",
+            lang_available: "Bu sayfa 6 dilde mevcut:",
             footer_imprint: "Künye (Impressum)",
             footer_privacy: "Gizlilik (Datenschutz)"
         },
@@ -355,6 +358,7 @@
             tl_5: "القرار (Bescheid) بشأن المقعد المدرسي",
             tl_when_6: "بعد العطلة الصيفية",
             tl_6: "بداية الصف السابع في المدرسة الجديدة",
+            lang_available: "هذه الصفحة متوفرة بـ 6 لغات:",
             footer_imprint: "بيانات الناشر (Impressum)",
             footer_privacy: "حماية البيانات (Datenschutz)"
         },
@@ -440,6 +444,7 @@
             tl_5: "Рішення (Bescheid) про місце в школі",
             tl_when_6: "після літніх канікул",
             tl_6: "Початок 7 класу в новій школі",
+            lang_available: "Ця сторінка доступна 6 мовами:",
             footer_imprint: "Вихідні дані (Impressum)",
             footer_privacy: "Захист даних (Datenschutz)"
         },
@@ -525,6 +530,7 @@
             tl_5: "Решение (Bescheid) о месте в школе",
             tl_when_6: "после летних каникул",
             tl_6: "Начало 7 класса в новой школе",
+            lang_available: "Эта страница доступна на 6 языках:",
             footer_imprint: "Выходные данные (Impressum)",
             footer_privacy: "Защита данных (Datenschutz)"
         }
