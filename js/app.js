@@ -149,6 +149,7 @@
         zeigeTermine();
         zeigeDatenquelle();
         aktualisiereGymHinweis();
+        zeigeVergleich();
         if (letzteSuche) {
             zeigeSuche(letzteSuche);
         }
@@ -451,6 +452,8 @@
                 kontakt.appendChild(mail);
             }
             li.appendChild(kontakt);
+            li.appendChild(baueMerkKnopf(s));
+            li.appendChild(baueDetails(s));
             liste.appendChild(li);
         });
 
@@ -458,6 +461,221 @@
             zeichneKarte(r);
         }
     }
+
+    // ---------- Details, Merkliste und Vergleich ----------
+
+    var merkliste = window.Merkliste.erstelle((function () {
+        try { return window.localStorage; } catch (e) { return null; }
+    })());
+    var schuleNachId = {};
+    daten.schulen.forEach(function (s) { schuleNachId[s.id] = s; });
+
+    var AUSWAHL_FELDER = { ganztag: true, essen: true };
+    var AUSWAHL_WERTE = [["", "opt_unknown"], ["ja", "opt_yes"], ["teilweise", "opt_partly"], ["nein", "opt_no"]];
+    var FELD_TEXT = {
+        sprachen: "f_lang", ganztag: "f_ganztag", profil: "f_profil",
+        essen: "f_essen", tdot: "f_tdot", notizen: "f_notes"
+    };
+
+    function minuten(km, kmh) {
+        // Umweg-Faktor 1,3 gegenüber der Luftlinie, auf 5 Minuten gerundet
+        return Math.max(5, Math.round((km * 1.3 / kmh) * 60 / 5) * 5);
+    }
+
+    function anfahrtLink(s) {
+        var ziel = s.s + ", " + s.z + " Berlin";
+        return "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(ziel);
+    }
+
+    function baueMerkKnopf(s) {
+        var knopf = document.createElement("button");
+        knopf.type = "button";
+        knopf.className = "merken";
+        function beschriften() {
+            var an = merkliste.istGemerkt(s.id);
+            knopf.textContent = an ? t("btn_remembered") : t("btn_remember");
+            knopf.setAttribute("aria-pressed", an ? "true" : "false");
+        }
+        beschriften();
+        knopf.addEventListener("click", function () {
+            merkliste.umschalten(s.id);
+            beschriften();
+            zeigeVergleich();
+        });
+        return knopf;
+    }
+
+    function wertAnzeige(feld, wert) {
+        if (AUSWAHL_FELDER[feld]) {
+            var paar = AUSWAHL_WERTE.filter(function (p) { return p[0] === wert; })[0];
+            return wert && paar ? t(paar[1]) : "–";
+        }
+        return wert || "–";
+    }
+
+    function baueDetails(s) {
+        var details = document.createElement("details");
+        details.className = "schul-details";
+        var summary = document.createElement("summary");
+        summary.textContent = t("details_school");
+        details.appendChild(summary);
+
+        var weg = document.createElement("div");
+        weg.className = "detail-block";
+        var h = document.createElement("h4");
+        h.textContent = t("travel_title");
+        var zeile = document.createElement("p");
+        zeile.textContent = s.km !== undefined
+            ? t("dist_line", { km: zahl(s.km, 1), fuss: minuten(s.km, 4.5), rad: minuten(s.km, 15) })
+            : "";
+        var link = document.createElement("a");
+        link.href = anfahrtLink(s);
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "🚌 " + t("travel_link");
+        var notiz = document.createElement("p");
+        notiz.className = "klein";
+        notiz.textContent = t("travel_note");
+        weg.appendChild(h);
+        weg.appendChild(zeile);
+        weg.appendChild(link);
+        weg.appendChild(notiz);
+        details.appendChild(weg);
+
+        var check = document.createElement("div");
+        check.className = "detail-block";
+        var h2 = document.createElement("h4");
+        h2.textContent = t("check_title");
+        var hinweis = document.createElement("p");
+        hinweis.className = "klein";
+        hinweis.textContent = t("check_hint");
+        check.appendChild(h2);
+        check.appendChild(hinweis);
+
+        var raster = document.createElement("div");
+        raster.className = "check-raster";
+        window.Merkliste.FELDER.forEach(function (feld) {
+            var label = document.createElement("label");
+            label.className = "check-feld";
+            var span = document.createElement("span");
+            span.textContent = t(FELD_TEXT[feld]);
+            label.appendChild(span);
+            var eingabe;
+            if (AUSWAHL_FELDER[feld]) {
+                eingabe = document.createElement("select");
+                AUSWAHL_WERTE.forEach(function (p) {
+                    var o = document.createElement("option");
+                    o.value = p[0];
+                    o.textContent = t(p[1]);
+                    eingabe.appendChild(o);
+                });
+            } else if (feld === "notizen") {
+                eingabe = document.createElement("textarea");
+                eingabe.rows = 2;
+            } else {
+                eingabe = document.createElement("input");
+                eingabe.type = "text";
+            }
+            eingabe.value = merkliste.notiz(s.id, feld);
+            eingabe.maxLength = 2000;
+            eingabe.addEventListener("change", function () {
+                merkliste.setzeNotiz(s.id, feld, eingabe.value);
+                zeigeVergleich();
+            });
+            label.appendChild(eingabe);
+            raster.appendChild(label);
+        });
+        check.appendChild(raster);
+        details.appendChild(check);
+        return details;
+    }
+
+    function zeigeVergleich() {
+        var ids = merkliste.ids().filter(function (id) { return schuleNachId[id]; });
+        document.getElementById("vergleichLeer").classList.toggle("verborgen", ids.length > 0);
+        document.getElementById("vergleichBereich").classList.toggle("verborgen", ids.length === 0);
+        var tabelle = document.getElementById("vergleichTabelle");
+        tabelle.textContent = "";
+        if (ids.length === 0) return;
+
+        var schulen = ids.map(function (id) { return schuleNachId[id]; });
+        var mitte = letzteSuche && letzteSuche.ok ? letzteSuche.mitte : null;
+
+        var kopf = document.createElement("thead");
+        var kopfZeile = document.createElement("tr");
+        kopfZeile.appendChild(document.createElement("th"));
+        schulen.forEach(function (s) {
+            var th = document.createElement("th");
+            th.scope = "col";
+            var name = document.createElement("div");
+            name.lang = "de";
+            name.textContent = s.n;
+            var weg = document.createElement("button");
+            weg.type = "button";
+            weg.className = "entfernen nur-bildschirm";
+            weg.textContent = "✕ " + t("compare_remove");
+            weg.addEventListener("click", function () {
+                merkliste.umschalten(s.id);
+                zeigeVergleich();
+                if (letzteSuche) zeigeSuche(letzteSuche);
+            });
+            th.appendChild(name);
+            th.appendChild(weg);
+            kopfZeile.appendChild(th);
+        });
+        kopf.appendChild(kopfZeile);
+        tabelle.appendChild(kopf);
+
+        var zeilen = [
+            ["compare_type", function (s) { return SCHULART_NAMEN[s.a]; }],
+            ["compare_carrier", function (s) { return s.p ? t("school_private") : t("school_public"); }],
+            ["compare_area", function (s) { return s.o || "–"; }],
+            ["compare_distance", function (s) {
+                if (!mitte) return "–";
+                var km = window.Umkreis.entfernungKm(mitte[0], mitte[1], s.lat, s.lon);
+                return zahl(km, 1) + " km · 🚶 " + minuten(km, 4.5) + " min";
+            }]
+        ];
+        window.Merkliste.FELDER.forEach(function (feld) {
+            zeilen.push([FELD_TEXT[feld], function (s) { return wertAnzeige(feld, merkliste.notiz(s.id, feld)); }]);
+        });
+        zeilen.push(["website", function (s) {
+            if (!s.w) return "–";
+            var a = document.createElement("a");
+            a.href = /^https?:\/\//.test(s.w) ? s.w : "https://" + s.w;
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.textContent = "🌐 " + t("website");
+            return a;
+        }]);
+
+        var rumpf = document.createElement("tbody");
+        zeilen.forEach(function (z) {
+            var tr = document.createElement("tr");
+            var th = document.createElement("th");
+            th.scope = "row";
+            th.textContent = t(z[0]);
+            tr.appendChild(th);
+            schulen.forEach(function (s) {
+                var td = document.createElement("td");
+                var inhalt = z[1](s);
+                if (typeof inhalt === "string") {
+                    td.textContent = inhalt;
+                } else {
+                    td.appendChild(inhalt);
+                }
+                tr.appendChild(td);
+            });
+            rumpf.appendChild(tr);
+        });
+        tabelle.appendChild(rumpf);
+    }
+
+    document.getElementById("vergleichLeeren").addEventListener("click", function () {
+        merkliste.leeren();
+        zeigeVergleich();
+        if (letzteSuche) zeigeSuche(letzteSuche);
+    });
 
     var FARBEN = { gym: "#1565c0", iss: "#1b7f3b", gms: "#8e24aa" };
 

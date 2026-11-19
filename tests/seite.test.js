@@ -32,7 +32,7 @@ test("Keine Inline-Skripte und keine fremden Skripte in index.html", () => {
 test("Menü-Links zeigen auf vorhandene Abschnitte", () => {
     const ziele = [...html.matchAll(/class="sprungmenue[\s\S]*?<\/nav>/g)][0][0]
         .match(/href="#([\w-]+)"/g).map((h) => h.slice(7, -1));
-    assert.equal(ziele.length, 4);
+    assert.equal(ziele.length, 5);
     for (const id of ziele) {
         assert.match(html, new RegExp('id="' + id + '"'), id);
     }

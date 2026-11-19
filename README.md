@@ -18,6 +18,10 @@ Gymnasium, Integrierte Sekundarschule (ISS) und Gemeinschaftsschule.
 - Schulen in der Nähe: Postleitzahl eingeben, Filter nach Gymnasium, ISS, Gemeinschaftsschule und Privatschulen,
   Liste mit Entfernung und Karte (OpenStreetMap, lädt erst nach Klick)
 - Wichtige Termine für den Wechsel und häufige Fragen (FAQ)
+- Details pro Schule: Weg zur Schule (Luftlinie, zu Fuß, Fahrrad, Link zu Bus und Bahn) und eine
+  Checkliste zum Ausfüllen (Fremdsprachen, Ganztag, Profil, Mittagessen, Tag der offenen Tür, Notizen)
+- Schulen merken und nebeneinander vergleichen (nur lokal im Browser gespeichert, `js/merkliste.js`)
+- Checkliste für die Schulwahl und 5 Fragen für den Tag der offenen Tür
 - Keine Daten werden gesendet oder gespeichert, keine Cookies
 - Impressum und Datenschutzerklärung
 

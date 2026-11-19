@@ -84,6 +84,7 @@ const schulen = schulDaten.features
         const p = f.properties;
         const [lon, lat] = f.geometry.coordinates;
         return {
+            id: p.bsn,
             n: p.schulname,
             a: SCHULARTEN[p.schulart],
             p: p.traeger === "privat" ? 1 : 0,

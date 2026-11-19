@@ -55,6 +55,7 @@
     <nav class="sprungmenue nur-bildschirm" data-i18n-aria="nav_label" aria-label="Inhalt">
         <a href="#rechnerForm" data-i18n="nav_calc">Rechner</a>
         <a href="#schulsuche" data-i18n="nav_schools">Schulen</a>
+        <a href="#vergleich" data-i18n="nav_compare">Vergleichen</a>
         <a href="#termine" data-i18n="nav_dates">Termine</a>
         <a href="#fragen" data-i18n="nav_faq">Fragen</a>
     </nav>
@@ -233,6 +234,45 @@
         <p id="datenquelle" class="klein"></p>
     </section>
 
+    <section id="vergleich" class="abschnitt">
+        <h2 data-i18n="compare_title">Meine Schulen vergleichen</h2>
+        <p id="vergleichLeer" class="klein" data-i18n="compare_empty">Noch keine Schule gemerkt. Klicken Sie in der Schulliste auf „Merken“.</p>
+        <div id="vergleichBereich" class="verborgen">
+            <div class="tabelle-scroll">
+                <table id="vergleichTabelle" class="vergleich-tabelle"></table>
+            </div>
+            <div class="knoepfe nur-bildschirm">
+                <button type="button" id="vergleichLeeren" class="zweitrangig" data-i18n="compare_clear">Alle löschen</button>
+            </div>
+        </div>
+        <p class="klein" data-i18n="compare_storage">Gemerkte Schulen und Notizen werden nur in diesem Browser gespeichert und nicht gesendet.</p>
+    </section>
+
+    <section id="ratgeber" class="abschnitt">
+        <div class="ratgeber-karten">
+            <div class="ratgeber-karte">
+                <h2 data-i18n="guide_title">Checkliste für die Schulwahl</h2>
+                <ul class="haken-liste">
+                <li data-i18n="guide_1">Fremdsprachen: Welche Sprachen gibt es, und ab wann eine zweite Fremdsprache?</li>
+                <li data-i18n="guide_2">Ganztag: Gibt es Unterricht und Angebote bis in den Nachmittag?</li>
+                <li data-i18n="guide_3">Profil: Hat die Schule einen Schwerpunkt, zum Beispiel MINT, Musik, Sport oder bilingual?</li>
+                <li data-i18n="guide_4">Schulweg: Wie lange dauert der Weg zu Fuß, mit dem Fahrrad, mit Bus oder Bahn?</li>
+                <li data-i18n="guide_5">Mittagessen: Gibt es eine Mensa oder ein warmes Mittagessen?</li>
+                </ul>
+            </div>
+            <div class="ratgeber-karte">
+                <h2 data-i18n="q_title">5 Fragen für den Tag der offenen Tür</h2>
+                <ol class="fragen-liste">
+                <li data-i18n="q_1">Welche Fremdsprachen gibt es ab Klasse 7, und wann beginnt die zweite Fremdsprache?</li>
+                <li data-i18n="q_2">Wie sieht ein normaler Schultag aus, und wie lange dauert er?</li>
+                <li data-i18n="q_3">Welche Schwerpunkte, AGs und Projekte gibt es?</li>
+                <li data-i18n="q_4">Wie werden Kinder unterstützt, die Hilfe brauchen, und wie werden starke Kinder gefördert?</li>
+                <li data-i18n="q_5">Wie viele Anmeldungen gab es letztes Jahr, und wie viele Plätze gibt es in Klasse 7?</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
     <section id="termine" class="abschnitt termine">
         <h2 data-i18n="dates_title">Wichtige Termine für den Wechsel 2027</h2>
         <div class="nicht-verpassen">
@@ -292,6 +332,7 @@
 <script src="data/schulen.js"></script>
 <script src="js/rechner.js"></script>
 <script src="js/umkreis.js"></script>
+<script src="js/merkliste.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 

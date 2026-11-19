@@ -941,3 +941,197 @@ input[type="checkbox"]:focus-visible {
         content: none;
     }
 }
+
+/* ---------- Schul-Details, Merken, Vergleich, Ratgeber ---------- */
+
+.merken {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    min-height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--orange-rand);
+    background: #fff;
+    color: var(--orange);
+}
+
+.merken:hover {
+    background: var(--orange-hell);
+    border-color: var(--orange-rand);
+}
+
+.merken[aria-pressed="true"] {
+    background: var(--orange-hell);
+    border-color: var(--orange);
+}
+
+.schul-details {
+    margin-top: 10px;
+    border-top: 1px dashed var(--rand);
+    padding-top: 8px;
+}
+
+.schul-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--blau);
+    min-height: 32px;
+}
+
+.detail-block {
+    margin-top: 10px;
+}
+
+.detail-block h4 {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.detail-block p {
+    margin-bottom: 6px;
+}
+
+.check-raster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px 14px;
+    margin-top: 8px;
+}
+
+.check-feld {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.check-feld input,
+.check-feld select,
+.check-feld textarea {
+    font: inherit;
+    font-weight: 400;
+    font-size: 1rem;
+    padding: 8px 10px;
+    border: 1px solid var(--rand);
+    border-radius: 8px;
+    background: #fff;
+    width: 100%;
+}
+
+.check-feld textarea {
+    resize: vertical;
+}
+
+.tabelle-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--rand);
+    border-radius: 10px;
+}
+
+.vergleich-tabelle {
+    border-collapse: collapse;
+    min-width: 100%;
+    font-size: 0.9rem;
+}
+
+.vergleich-tabelle th,
+.vergleich-tabelle td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e6edf5;
+    text-align: start;
+    vertical-align: top;
+    min-width: 150px;
+    overflow-wrap: anywhere;
+}
+
+.vergleich-tabelle thead th {
+    background: var(--blau-hell);
+}
+
+.vergleich-tabelle tbody th {
+    color: var(--text-leise);
+    font-weight: 600;
+    min-width: 120px;
+    background: #fbfcfe;
+}
+
+.entfernen {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 2px 10px;
+    min-height: 30px;
+    border-radius: 999px;
+    border: 1px solid var(--rand);
+    background: #fff;
+    color: var(--text-leise);
+}
+
+.entfernen:hover {
+    background: var(--rot-hell);
+    border-color: var(--rot-rand);
+    color: var(--rot);
+}
+
+.ratgeber-karten {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.ratgeber-karte {
+    background: var(--gruen-hell);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+}
+
+.ratgeber-karte h2 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+}
+
+.haken-liste {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+}
+
+.haken-liste li {
+    position: relative;
+    padding-inline-start: 28px;
+}
+
+.haken-liste li::before {
+    content: "✔";
+    position: absolute;
+    inset-inline-start: 0;
+    color: var(--gruen);
+    font-weight: 700;
+}
+
+.fragen-liste {
+    display: grid;
+    gap: 8px;
+    padding-inline-start: 22px;
+}
+
+@media print {
+    .schul-details,
+    .merken {
+        display: none !important;
+    }
+
+    .tabelle-scroll {
+        overflow: visible;
+        border: none;
+    }
+
+    .ratgeber-karte {
+        background: none;
+        border: 1px solid var(--rand);
+        break-inside: avoid;
+    }
+}
