@@ -59,6 +59,12 @@ h1 {
     line-height: 1.2;
 }
 
+.tagline {
+    font-weight: 700;
+    color: var(--blau-dunkel);
+    margin-top: 2px;
+}
+
 .untertitel {
     color: var(--text-leise);
     margin-top: 6px;

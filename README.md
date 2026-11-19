@@ -1,4 +1,6 @@
-# Gymnasium-Rechner Berlin
+# Oberschul-Helfer Berlin
+
+**Von der Grundschule zur Oberschule**
 
 Unverbindlicher Rechner für die Förderprognose beim Übergang von der Grundschule in Klasse 7 in Berlin.
 Eltern tragen die Noten aus den Zeugnissen 5/2 und 6/1 ein und sehen, welche Schularten möglich sind:
