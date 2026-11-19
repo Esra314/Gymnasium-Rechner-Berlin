@@ -1,85 +1,156 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gymnasium Rechner Berlin</title>
+    <title>Gymnasium-Rechner Berlin</title>
+    <meta name="description" content="Kostenloser, unverbindlicher Rechner für die Förderprognose in Berlin: Notensumme, Durchschnittsnote und mögliche Schularten nach Klasse 6. Auch auf Englisch, Türkisch, Arabisch, Ukrainisch und Russisch.">
+    <meta name="theme-color" content="#1565c0">
+    <meta property="og:title" content="Gymnasium-Rechner Berlin">
+    <meta property="og:description" content="Welche Schule ist nach Klasse 6 möglich? Unverbindlich berechnen mit den Zeugnisnoten.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="container">
+<main class="container">
 
-    <h1>🏫 Gymnasium Rechner Berlin</h1>
-
-    <form id="rechnerForm">
-
-        <h2>Schülerdaten</h2>
-
-        <label>Vorname</label>
-        <input type="text" id="vorname" required>
-
-        <label>Nachname</label>
-        <input type="text" id="nachname" required>
-
-        <h2>5. Klasse (2. Halbjahr)</h2>
-
-        <div class="noten-grid">
-            <input type="number" id="deutsch5" placeholder="Deutsch" min="1" max="6" required>
-            <input type="number" id="mathe5" placeholder="Mathematik" min="1" max="6" required>
-            <input type="number" id="englisch5" placeholder="Englisch" min="1" max="6" required>
-            <input type="number" id="nawi5" placeholder="NaWi" min="1" max="6" required>
-            <input type="number" id="gewi5" placeholder="GeWi" min="1" max="6" required>
-            <input type="number" id="kunst5" placeholder="Kunst" min="1" max="6" required>
-            <input type="number" id="musik5" placeholder="Musik" min="1" max="6" required>
-            <input type="number" id="sport5" placeholder="Sport" min="1" max="6" required>
+    <header class="kopf">
+        <div>
+            <h1>Gymnasium-Rechner Berlin</h1>
+            <p class="untertitel" data-i18n="subtitle"></p>
         </div>
+        <label class="sprachwahl">
+            <span data-i18n="lang_label">Sprache</span>
+            <select id="sprache"></select>
+        </label>
+    </header>
 
-        <h2>6. Klasse (1. Halbjahr)</h2>
+    <noscript>
+        <p class="fehler-box">Bitte aktivieren Sie JavaScript, um den Rechner zu nutzen.</p>
+    </noscript>
 
-        <div class="noten-grid">
-            <input type="number" id="deutsch6" placeholder="Deutsch" min="1" max="6" required>
-            <input type="number" id="mathe6" placeholder="Mathematik" min="1" max="6" required>
-            <input type="number" id="englisch6" placeholder="Englisch" min="1" max="6" required>
-            <input type="number" id="nawi6" placeholder="NaWi" min="1" max="6" required>
-            <input type="number" id="gewi6" placeholder="GeWi" min="1" max="6" required>
-            <input type="number" id="kunst6" placeholder="Kunst" min="1" max="6" required>
-            <input type="number" id="musik6" placeholder="Musik" min="1" max="6" required>
-            <input type="number" id="sport6" placeholder="Sport" min="1" max="6" required>
+    <p class="hinweis" data-i18n="intro"></p>
+
+    <form id="rechnerForm" novalidate>
+
+        <fieldset>
+            <legend data-i18n="legend_grades"></legend>
+
+            <label class="fs-wahl">
+                <span data-i18n="fs_label"></span>
+                <select id="fremdsprache-name">
+                    <option>Englisch</option>
+                    <option>Französisch</option>
+                    <option>Spanisch</option>
+                    <option>Italienisch</option>
+                    <option>Polnisch</option>
+                    <option>Portugiesisch</option>
+                    <option>Russisch</option>
+                    <option>Türkisch</option>
+                    <option>Griechisch</option>
+                </select>
+            </label>
+
+            <table class="noten-tabelle">
+                <thead>
+                    <tr>
+                        <th scope="col" data-i18n="col_subject"></th>
+                        <th scope="col"><span class="hj">5/2</span><span class="hj-text" data-i18n="col_52"></span></th>
+                        <th scope="col"><span class="hj">6/1</span><span class="hj-text" data-i18n="col_61"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="noten-zeilen"></tbody>
+            </table>
+
+            <p class="klein" data-i18n="optional_hint"></p>
+        </fieldset>
+
+        <div id="fehler" class="fehler-box verborgen" role="alert"></div>
+
+        <div class="knoepfe">
+            <button type="submit" data-i18n="btn_calc"></button>
+            <button type="reset" class="zweitrangig" data-i18n="btn_reset"></button>
         </div>
-
-        <button type="submit">
-            Durchschnitt berechnen
-        </button>
 
     </form>
 
-    <div id="ergebnis" class="ergebnis-box verborgen">
-        <h2>Ergebnis</h2>
+    <section id="ergebnis" class="ergebnis verborgen" aria-live="polite" tabindex="-1">
+        <h2 data-i18n="result_title"></h2>
 
+        <div class="kennzahlen">
+            <div class="kennzahl">
+                <div class="kennzahl-titel" data-i18n="sum_label"></div>
+                <div class="kennzahl-wert" id="notensumme"></div>
+                <p class="klein" data-i18n="sum_hint"></p>
+            </div>
+            <div class="kennzahl">
+                <div class="kennzahl-titel" data-i18n="avg_label"></div>
+                <div class="kennzahl-wert" id="durchschnitt"></div>
+                <p class="klein" data-i18n="avg_hint"></p>
+            </div>
+        </div>
+
+        <h3 data-i18n="schools_title"></h3>
+        <ul class="schularten">
+            <li class="schulart" id="karte-gym">
+                <div class="schulart-kopf">
+                    <strong>Gymnasium</strong>
+                    <span class="status" id="status-gym"></span>
+                </div>
+                <p data-i18n="desc_gym"></p>
+            </li>
+            <li class="schulart ok">
+                <div class="schulart-kopf">
+                    <strong>Integrierte Sekundarschule (ISS)</strong>
+                    <span class="status" data-i18n="status_yes"></span>
+                </div>
+                <p data-i18n="desc_iss"></p>
+            </li>
+            <li class="schulart ok">
+                <div class="schulart-kopf">
+                    <strong>Gemeinschaftsschule</strong>
+                    <span class="status" data-i18n="status_yes"></span>
+                </div>
+                <p data-i18n="desc_gms"></p>
+            </li>
+        </ul>
+
+        <div id="probe" class="info-box verborgen">
+            <h3 data-i18n="probe_title"></h3>
+            <p data-i18n="probe_text"></p>
+        </div>
+
+        <details class="rechenweg">
+            <summary data-i18n="details_title"></summary>
+            <p id="rechenweg-summe"></p>
+            <p id="rechenweg-schnitt"></p>
+        </details>
+
+        <div class="knoepfe">
+            <button type="button" id="drucken" class="zweitrangig" data-i18n="btn_print"></button>
+        </div>
+    </section>
+
+    <aside class="fuss-hinweise">
+        <p data-i18n="disclaimer"></p>
+        <p data-i18n="privacy_note"></p>
         <p>
-            👤 Schüler:
-            <strong id="schuelerName"></strong>
+            <a href="https://www.berlin.de/sen/bildung/schule/bildungswege/uebergang-weiterfuehrende-schule/wechsel-zur-7-klasse/"
+               target="_blank" rel="noopener" data-i18n="official_link"></a>
         </p>
+    </aside>
 
-        <p>
-            📊 Durchschnitt:
-            <strong id="durchschnitt"></strong>
-        </p>
+</main>
 
-        <p>
-            📚 Hauptfachsumme:
-            <strong id="hauptfachsumme"></strong>
-        </p>
+<footer class="seitenfuss">
+    <a href="impressum.html" data-i18n="footer_imprint">Impressum</a>
+    <a href="datenschutz.html" data-i18n="footer_privacy">Datenschutz</a>
+</footer>
 
-        <p>
-            🎯 Empfehlung:
-            <strong id="empfehlung"></strong>
-        </p>
-    </div>
-
-</div>
-
+<script src="js/rechner.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 
 </body>
