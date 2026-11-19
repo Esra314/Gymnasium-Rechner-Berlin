@@ -6,7 +6,6 @@
 
     var form = document.getElementById("rechnerForm");
     var zeilen = document.getElementById("noten-zeilen");
-    var spracheSelect = document.getElementById("sprache");
     var fsName = document.getElementById("fremdsprache-name");
     var fehlerBox = document.getElementById("fehler");
     var ergebnis = document.getElementById("ergebnis");
@@ -121,7 +120,6 @@
         var info = I18n.SPRACHEN.filter(function (s) { return s.code === code; })[0];
         document.documentElement.lang = code;
         document.documentElement.dir = info ? info.dir : "ltr";
-        spracheSelect.value = code;
         document.querySelectorAll("#sprachChips button").forEach(function (b) {
             b.setAttribute("aria-pressed", b.dataset.lang === code ? "true" : "false");
         });
@@ -153,13 +151,6 @@
     }
 
     function baueSprachauswahl() {
-        I18n.SPRACHEN.forEach(function (s) {
-            var opt = document.createElement("option");
-            opt.value = s.code;
-            opt.textContent = s.name;
-            opt.lang = s.code;
-            spracheSelect.appendChild(opt);
-        });
         var chips = document.getElementById("sprachChips");
         I18n.SPRACHEN.forEach(function (s) {
             var li = document.createElement("li");
@@ -171,9 +162,6 @@
             b.addEventListener("click", function () { setzeSprache(s.code); });
             li.appendChild(b);
             chips.appendChild(li);
-        });
-        spracheSelect.addEventListener("change", function () {
-            setzeSprache(spracheSelect.value);
         });
     }
 
@@ -558,6 +546,13 @@
     document.getElementById("drucken").addEventListener("click", function () {
         window.print();
     });
+
+    // Als App installierbar und offline nutzbar (nur über https oder localhost)
+    if ("serviceWorker" in navigator && window.isSecureContext && location.protocol !== "file:") {
+        window.addEventListener("load", function () {
+            navigator.serviceWorker.register("sw.js").catch(function () { /* ohne Offline-Modus weiter */ });
+        });
+    }
 
     baueTabelle();
     baueSprachauswahl();

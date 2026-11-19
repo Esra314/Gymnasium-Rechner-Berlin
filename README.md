@@ -47,6 +47,19 @@ tests/              Tests mit node:test
 
 `index.html` im Browser öffnen. Eine Sprache direkt öffnen: `index.html?lang=tr` (de, en, tr, ar, uk, ru).
 
+## Auf allen Geräten
+
+Die Seite passt sich an Handy, Tablet und Computer an (Android, iPhone/iPad, Windows, Mac, Linux).
+Sie lässt sich als App auf den Startbildschirm legen und funktioniert danach auch offline
+(`manifest.webmanifest`, `sw.js`, Icons in `icons/`).
+
+- Android/Chrome/Edge: Menü → „App installieren“ bzw. „Zum Startbildschirm hinzufügen“
+- iPhone/iPad (Safari): Teilen → „Zum Home-Bildschirm“
+- Windows/Mac/Linux (Chrome oder Edge): Installieren-Symbol in der Adressleiste
+
+**Wichtig:** Nach jeder Änderung an den Dateien in `sw.js` die `VERSION` erhöhen,
+damit installierte Apps die neue Fassung laden.
+
 ## Tests
 
 ```bash

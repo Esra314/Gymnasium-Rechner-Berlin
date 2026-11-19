@@ -834,17 +834,26 @@ input[type="checkbox"]:focus-visible {
 
 /* Sprachauswahl als Chips */
 
-.sprachen-info {
+.sprachleiste {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
     margin: -8px 0 20px;
-    font-size: 0.9rem;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e6edf5;
+    font-size: 0.85rem;
     color: var(--text-leise);
+}
+
+.kopf {
+    display: block;
 }
 
 .sprach-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 6px;
     list-style: none;
 }
 
@@ -871,7 +880,7 @@ input[type="checkbox"]:focus-visible {
 }
 
 @media print {
-    .sprachen-info {
+    .sprachleiste {
         display: none !important;
     }
 
