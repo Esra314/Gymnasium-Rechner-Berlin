@@ -10,7 +10,8 @@ Gymnasium, Integrierte Sekundarschule (ISS) und Gemeinschaftsschule.
 
 - Noteneingabe wie im Zeugnis (Fächer und Schularten bleiben auf Deutsch)
 - Notensumme aus Deutsch, Mathematik und 1. Fremdsprache (bis 14: Gymnasium möglich)
-- Durchschnittsnote aller Fächer (Hauptfächer, Naturwissenschaften und Gesellschaftswissenschaften doppelt)
+- Durchschnittsnote aller Fächer (Hauptfächer, Naturwissenschaften und Gesellschaftswissenschaften doppelt),
+  wie amtlich mit einer Stelle nach dem Komma und nicht gerundet (§ 24 GsVO, Beispiel: 67 : 26 = 2,5)
 - Erklärung zu Gymnasium, ISS, Gemeinschaftsschule und Probeunterricht
 - Erklärtexte auf Deutsch, Englisch, Türkisch, Arabisch (von rechts nach links), Ukrainisch und Russisch
 - Rechenweg zum Aufklappen, Ergebnis als PDF speichern oder drucken
@@ -57,8 +58,19 @@ Sie lässt sich als App auf den Startbildschirm legen und funktioniert danach au
 - iPhone/iPad (Safari): Teilen → „Zum Home-Bildschirm“
 - Windows/Mac/Linux (Chrome oder Edge): Installieren-Symbol in der Adressleiste
 
-**Wichtig:** Nach jeder Änderung an den Dateien in `sw.js` die `VERSION` erhöhen,
-damit installierte Apps die neue Fassung laden.
+Der Service Worker lädt online immer die neueste Fassung (zuerst Netz, dann Speicher).
+Updates sind daher sofort sichtbar. `VERSION` in `sw.js` nur erhöhen, wenn sich die Dateiliste ändert.
+
+## Texte ändern
+
+Alle Texte stehen in `js/i18n.js`. Die deutschen Texte stehen zusätzlich direkt in `index.html`
+(für Suchmaschinen und Link-Vorschauen). Nach einer Textänderung:
+
+```bash
+npm run texte
+```
+
+`npm test` meldet einen Fehler, wenn das vergessen wurde.
 
 ## Tests
 
@@ -88,3 +100,10 @@ Am besten einmal pro Schuljahr ausführen.
 
 Repository → Settings → Pages → Source: „Deploy from branch“, Branch `main`, Ordner `/ (root)`.
 Vorher in `impressum.html` und `datenschutz.html` die gelb markierten Platzhalter ausfüllen.
+
+Die Adresse `https://esra314.github.io/Gymnasium-Rechner-Berlin/` steht in `index.html`
+(canonical, hreflang, og:url, og:image), `sitemap.xml` und `robots.txt`. Bei einer eigenen Domain dort anpassen.
+Danach die `sitemap.xml` in der Google Search Console einreichen.
+
+Sicherheit: Jede Seite hat eine Content-Security-Policy (meta-Tag). Es gibt keine Inline-Skripte;
+fremde Server sind nur für die Kartenbilder von OpenStreetMap erlaubt.

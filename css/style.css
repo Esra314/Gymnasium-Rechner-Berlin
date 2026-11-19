@@ -389,6 +389,47 @@ a {
     display: none !important;
 }
 
+/* ---------- Kurzes Menü zu den Abschnitten ---------- */
+
+html {
+    scroll-behavior: smooth;
+}
+
+[id] {
+    scroll-margin-top: 12px;
+}
+
+.sprungmenue {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -4px 0 20px;
+}
+
+.sprungmenue a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 4px 14px;
+    border: 1px solid var(--rand);
+    border-radius: 999px;
+    background: var(--blau-hell);
+    color: var(--blau-dunkel);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.sprungmenue a:hover {
+    border-color: var(--blau);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
 /* ---------- Abschnitte: Schulsuche, Termine, FAQ ---------- */
 
 .abschnitt {
@@ -544,6 +585,14 @@ input[type="checkbox"]:focus-visible {
     gap: 4px 16px;
     font-size: 0.9rem;
     overflow-wrap: anywhere;
+}
+
+/* Größere Fläche zum Antippen (mindestens 32 px hoch) */
+.kontakt a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 2px 0;
 }
 
 .hinweis-blau {

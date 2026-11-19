@@ -10,6 +10,9 @@
  * Teil 2 (nur Rangfolge bei übernachgefragten Schulen):
  *   Durchschnitt aller Fächer aus 5/2 und 6/1, Deutsch, Mathematik, Fremdsprache,
  *   Naturwissenschaften und Gesellschaftswissenschaften zählen doppelt.
+ *   Amtlich wird die Durchschnittsnote mit EINER Stelle nach dem Komma angegeben,
+ *   NICHT gerundet (§ 24 GsVO; Beispiel der Senatsverwaltung: 67 : 26 = 2,5).
+ *   Tendenzen (3+, 3-) zählen als ganze Note.
  *
  * Diese Datei hat keine Abhängigkeiten und läuft im Browser und in Node (Tests).
  */
@@ -32,6 +35,14 @@
 
     var HALBJAHRE = ["5/2", "6/1"];
 
+    /*
+     * Durchschnitt mit einer Stelle nach dem Komma, ohne Rundung (abgeschnitten).
+     * Mit ganzen Zahlen gerechnet, damit keine Rundungsfehler entstehen.
+     */
+    function abschneiden(gewichteteSumme, gewichtSumme) {
+        return Math.floor((gewichteteSumme * 10) / gewichtSumme) / 10;
+    }
+
     // Gültige Note: ganze Zahl von 1 bis 6.
     function istNote(wert) {
         return typeof wert === "number" && Number.isInteger(wert) && wert >= 1 && wert <= 6;
@@ -43,7 +54,8 @@
      *   ("keine Note"), dann zählt das Fach nicht mit.
      *
      * Rückgabe: { ok, fehler: [{fach, halbjahr}], notensumme, gewichteteSumme,
-     *             gewichtSumme, durchschnitt, gymnasiumMoeglich }
+     *             gewichtSumme, durchschnittGenau, durchschnitt (amtlich: 1 Stelle,
+     *             nicht gerundet), gymnasiumMoeglich }
      */
     function berechne(noten) {
         var fehler = [];
@@ -80,7 +92,8 @@
             notensumme: notensumme,
             gewichteteSumme: gewichteteSumme,
             gewichtSumme: gewichtSumme,
-            durchschnitt: gewichteteSumme / gewichtSumme,
+            durchschnittGenau: gewichteteSumme / gewichtSumme,
+            durchschnitt: abschneiden(gewichteteSumme, gewichtSumme),
             gymnasiumMoeglich: notensumme <= GRENZE_NOTENSUMME
         };
     }
@@ -90,6 +103,7 @@
         HALBJAHRE: HALBJAHRE,
         GRENZE_NOTENSUMME: GRENZE_NOTENSUMME,
         istNote: istNote,
+        abschneiden: abschneiden,
         berechne: berechne
     };
 

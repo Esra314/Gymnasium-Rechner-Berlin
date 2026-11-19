@@ -35,7 +35,8 @@ test("Durchschnitt: Hauptfächer, NaWi und GeWi zählen doppelt (Teiler 26)", ()
     // (10 Noten * 1 * 2 + 6 Noten * 4) / 26 = (20 + 24) / 26
     assert.equal(r.gewichtSumme, 26);
     assert.equal(r.gewichteteSumme, 44);
-    assert.ok(Math.abs(r.durchschnitt - 44 / 26) < 1e-12);
+    assert.ok(Math.abs(r.durchschnittGenau - 44 / 26) < 1e-12);
+    assert.equal(r.durchschnitt, 1.6); // 1,69… wird nicht gerundet
 });
 
 test("Fächer ohne Note (Kunst, Musik, Sport) zählen beim Durchschnitt nicht mit", () => {
@@ -76,4 +77,12 @@ test("Alle Sprachen haben dieselben Texte wie Deutsch", () => {
             assert.ok(text.trim().length > 0, `${sprache.code}.${schluessel} ist leer`);
         }
     }
+});
+
+test("Durchschnitt wie amtlich: eine Stelle, nicht gerundet (Beispiel 67 : 26 = 2,5)", () => {
+    assert.equal(Rechner.abschneiden(67, 26), 2.5);
+    assert.equal(Rechner.abschneiden(52, 26), 2);
+    assert.equal(Rechner.abschneiden(51, 26), 1.9); // 1,96…
+    assert.equal(Rechner.abschneiden(57, 26), 2.1); // 2,19…
+    assert.equal(Rechner.abschneiden(30, 25), 1.2); // genau 1,2
 });

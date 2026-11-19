@@ -37,6 +37,10 @@
         }).format(wert);
     }
 
+    function bisDreiStellen(wert) {
+        return new Intl.NumberFormat(gebietsschema(), { maximumFractionDigits: 3 }).format(wert);
+    }
+
     function fachAnzeige(fach) {
         if (fach.id === "fremdsprache") {
             return fach.name + " (" + fsName.value + ")";
@@ -127,6 +131,9 @@
         document.querySelectorAll("[data-i18n]").forEach(function (el) {
             el.textContent = t(el.dataset.i18n);
         });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+            el.setAttribute("aria-label", t(el.dataset.i18nAria));
+        });
 
         var url = new URL(window.location.href);
         if (code === "de") {
@@ -211,7 +218,7 @@
 
     function zeigeErgebnis(r) {
         document.getElementById("notensumme").textContent = String(r.notensumme);
-        document.getElementById("durchschnitt").textContent = zahl(r.durchschnitt, 2);
+        document.getElementById("durchschnitt").textContent = zahl(r.durchschnitt, 1);
 
         var karte = document.getElementById("karte-gym");
         var status = document.getElementById("status-gym");
@@ -233,7 +240,7 @@
 
         document.getElementById("rechenweg-schnitt").textContent =
             t("avg_label") + ": " + r.gewichteteSumme + " ÷ " + r.gewichtSumme +
-            " = " + zahl(r.durchschnitt, 2);
+            " = " + bisDreiStellen(r.durchschnittGenau) + " → " + zahl(r.durchschnitt, 1);
 
         ergebnis.classList.remove("verborgen");
     }
@@ -521,7 +528,15 @@
         pruefeUndBerechne(true);
     });
 
-    form.addEventListener("reset", function () {
+    form.addEventListener("reset", function (event) {
+        var etwasEingetragen = Array.prototype.some.call(
+            zeilen.querySelectorAll("select"),
+            function (s) { return s.value !== ""; }
+        );
+        if (etwasEingetragen && !window.confirm(t("confirm_reset"))) {
+            event.preventDefault();
+            return;
+        }
         letztesErgebnis = null;
         ergebnis.classList.add("verborgen");
         zeigeFehler([]);

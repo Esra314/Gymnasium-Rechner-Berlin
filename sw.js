@@ -1,8 +1,11 @@
 /*
  * Service Worker: macht die Seite offline nutzbar und als App installierbar.
- * Bei jeder Änderung an den Dateien VERSION erhöhen, damit Geräte die neue Fassung laden.
+ *
+ * Strategie "zuerst Netz": Ist das Gerät online, kommt immer die neueste Fassung
+ * vom Server (Updates sind sofort sichtbar). Nur ohne Internet wird die
+ * gespeicherte Kopie genutzt. VERSION nur erhöhen, wenn sich die Liste DATEIEN ändert.
  */
-const VERSION = "v1";
+const VERSION = "v2";
 const CACHE = "oberschul-helfer-" + VERSION;
 
 const DATEIEN = [
@@ -14,6 +17,7 @@ const DATEIEN = [
     "favicon.svg",
     "icons/icon-192.png",
     "icons/icon-512.png",
+    "icons/icon-maskable-512.png",
     "icons/apple-touch-icon.png",
     "css/style.css",
     "js/rechner.js",
@@ -33,31 +37,37 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
     event.waitUntil(
         caches.keys().then((namen) =>
-            Promise.all(namen.filter((n) => n !== CACHE).map((n) => caches.delete(n)))
+            Promise.all(namen.filter((n) => n.startsWith("oberschul-helfer-") && n !== CACHE)
+                .map((n) => caches.delete(n)))
         )
     );
     self.clients.claim();
 });
 
-// Eigene Dateien: sofort aus dem Speicher, im Hintergrund aktualisieren.
-// Fremde Server (Kartenbilder von OpenStreetMap) werden nicht gespeichert.
+// Fremde Server (Kartenbilder von OpenStreetMap) werden nicht abgefangen und nicht gespeichert.
 self.addEventListener("fetch", (event) => {
     const anfrage = event.request;
     if (anfrage.method !== "GET" || new URL(anfrage.url).origin !== self.location.origin) {
         return;
     }
     event.respondWith(
-        caches.open(CACHE).then(async (cache) => {
-            const gespeichert = await cache.match(anfrage, { ignoreSearch: true });
-            const ausDemNetz = fetch(anfrage)
-                .then((antwort) => {
-                    if (antwort.ok) {
-                        cache.put(anfrage, antwort.clone());
-                    }
-                    return antwort;
-                })
-                .catch(() => gespeichert);
-            return gespeichert || ausDemNetz;
-        })
+        fetch(anfrage)
+            .then((antwort) => {
+                if (antwort.ok && antwort.type === "basic") {
+                    const kopie = antwort.clone();
+                    caches.open(CACHE).then((cache) => cache.put(anfrage, kopie));
+                }
+                return antwort;
+            })
+            .catch(async () => {
+                const cache = await caches.open(CACHE);
+                const gespeichert = await cache.match(anfrage, { ignoreSearch: true });
+                if (gespeichert) return gespeichert;
+                if (anfrage.mode === "navigate") {
+                    const start = await cache.match("index.html");
+                    if (start) return start;
+                }
+                return Response.error();
+            })
     );
 });
