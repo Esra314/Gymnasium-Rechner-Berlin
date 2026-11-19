@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gymnasium-Rechner Berlin</title>
-    <meta name="description" content="Kostenloser, unverbindlicher Rechner für die Förderprognose in Berlin: Notensumme, Durchschnittsnote und mögliche Schularten nach Klasse 6. Auch auf Englisch, Türkisch, Arabisch, Ukrainisch und Russisch.">
+    <meta name="description" content="Kostenloser Notenrechner für den Übergang in Klasse 7 in Berlin: Durchschnittsberechnung, Notensumme und Gymnasialeignung (Förderprognose) prüfen. Passende Schulen in der Nähe finden: Gymnasium, Integrierte Sekundarschule (ISS) und Gemeinschaftsschule. Auf Deutsch, Englisch, Türkisch, Arabisch, Ukrainisch und Russisch.">
+    <meta name="keywords" content="Gymnasium Rechner Berlin, Notenrechner, Durchschnittsberechnung, Gymnasialeignung, Förderprognose, Notensumme, Schulwahl Berlin, Klasse 7, ISS, Integrierte Sekundarschule, Gemeinschaftsschule, Probeunterricht, Übergang Grundschule">
     <meta name="theme-color" content="#1565c0">
     <meta property="og:title" content="Gymnasium-Rechner Berlin">
     <meta property="og:description" content="Welche Schule ist nach Klasse 6 möglich? Unverbindlich berechnen mit den Zeugnisnoten.">
     <meta property="og:type" content="website">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -132,11 +134,100 @@
         <div class="knoepfe">
             <button type="button" id="drucken" class="zweitrangig" data-i18n="btn_print"></button>
         </div>
+        <p class="klein nur-bildschirm" data-i18n="pdf_hint"></p>
+    </section>
+
+    <section id="schulsuche" class="abschnitt">
+        <h2 data-i18n="near_title"></h2>
+        <p data-i18n="near_intro"></p>
+
+        <form id="sucheForm" class="suche" novalidate>
+            <div class="suche-zeile">
+                <label class="feld">
+                    <span data-i18n="plz_label"></span>
+                    <input id="plz" type="text" inputmode="numeric" autocomplete="postal-code"
+                           maxlength="5" pattern="[0-9]{5}" placeholder="10115" dir="ltr">
+                </label>
+                <label class="feld">
+                    <span data-i18n="radius_label"></span>
+                    <select id="radius" dir="ltr">
+                        <option value="2">2 km</option>
+                        <option value="3">3 km</option>
+                        <option value="5" selected>5 km</option>
+                        <option value="10">10 km</option>
+                    </select>
+                </label>
+            </div>
+
+            <fieldset class="filter">
+                <legend data-i18n="types_label"></legend>
+                <label class="schalter"><input type="checkbox" name="art" value="gym" checked> Gymnasium</label>
+                <label class="schalter"><input type="checkbox" name="art" value="iss" checked> Integrierte Sekundarschule (ISS)</label>
+                <label class="schalter"><input type="checkbox" name="art" value="gms" checked> Gemeinschaftsschule</label>
+                <label class="schalter"><input type="checkbox" id="privat" checked> <span data-i18n="private_label"></span></label>
+            </fieldset>
+            <p id="gym-hinweis" class="klein hinweis-orange verborgen"></p>
+
+            <div class="knoepfe">
+                <button type="submit" data-i18n="btn_search"></button>
+            </div>
+            <p class="klein" data-i18n="near_privacy"></p>
+        </form>
+
+        <div id="sucheFehler" class="fehler-box verborgen" role="alert"></div>
+
+        <div id="sucheErgebnis" class="verborgen" aria-live="polite">
+            <p id="trefferAnzahl" class="treffer-anzahl"></p>
+
+            <div class="karte-bereich nur-bildschirm">
+                <div id="karteHinweis">
+                    <button type="button" id="karteLaden" class="zweitrangig" data-i18n="btn_map"></button>
+                    <p class="klein" data-i18n="map_notice"></p>
+                </div>
+                <div id="karte" class="karte verborgen"></div>
+            </div>
+
+            <ol id="schulListe" class="schul-liste"></ol>
+            <button type="button" id="mehrSchulen" class="zweitrangig verborgen" data-i18n="show_more"></button>
+        </div>
+
+        <p id="datenquelle" class="klein"></p>
+    </section>
+
+    <section class="abschnitt termine">
+        <h2 data-i18n="dates_title"></h2>
+        <ul id="terminListe" class="termin-liste"></ul>
+        <p class="klein" data-i18n="dates_note"></p>
+    </section>
+
+    <section class="abschnitt faq nur-bildschirm">
+        <h2 data-i18n="faq_title"></h2>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q1"></summary>
+                <p data-i18n="faq_a1"></p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q2"></summary>
+                <p data-i18n="faq_a2"></p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q3"></summary>
+                <p data-i18n="faq_a3"></p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q4"></summary>
+                <p data-i18n="faq_a4"></p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q5"></summary>
+                <p data-i18n="faq_a5"></p>
+            </details>
     </section>
 
     <aside class="fuss-hinweise">
         <p data-i18n="disclaimer"></p>
         <p data-i18n="privacy_note"></p>
+        <p lang="de">Datenquellen: Schulen – Geoportal Berlin (dl-de/zero-2-0); Postleitzahlen – Amt für Statistik Berlin-Brandenburg 2026 / Postleitzahlen (<a href="https://creativecommons.org/licenses/by/3.0/de/" target="_blank" rel="noopener">CC BY 3.0 DE</a>); Karte – © OpenStreetMap-Mitwirkende.</p>
         <p>
             <a href="https://www.berlin.de/sen/bildung/schule/bildungswege/uebergang-weiterfuehrende-schule/wechsel-zur-7-klasse/"
                target="_blank" rel="noopener" data-i18n="official_link"></a>
@@ -150,7 +241,10 @@
     <a href="datenschutz.html" data-i18n="footer_privacy">Datenschutz</a>
 </footer>
 
+<script src="vendor/leaflet/leaflet.js" defer></script>
+<script src="data/schulen.js"></script>
 <script src="js/rechner.js"></script>
+<script src="js/umkreis.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 

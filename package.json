@@ -4,7 +4,8 @@
   "private": true,
   "description": "Unverbindlicher Rechner für die Förderprognose beim Übergang in Klasse 7 in Berlin",
   "scripts": {
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "schuldaten": "node scripts/schuldaten-laden.mjs"
   },
   "license": "UNLICENSED"
 }

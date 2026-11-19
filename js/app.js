@@ -14,16 +14,24 @@
     var aktuelleSprache = "de";
     var letztesErgebnis = null;
 
-    function t(schluessel) {
+    function t(schluessel, werte) {
         var text = (I18n.TEXTE[aktuelleSprache] || {})[schluessel];
         if (text === undefined) {
             text = I18n.TEXTE.de[schluessel] || "";
         }
-        return text.replace("{grenze}", String(Rechner.GRENZE_NOTENSUMME));
+        werte = werte || {};
+        werte.grenze = Rechner.GRENZE_NOTENSUMME;
+        return text.replace(/\{(\w+)\}/g, function (ganz, name) {
+            return werte[name] !== undefined ? String(werte[name]) : ganz;
+        });
+    }
+
+    function gebietsschema() {
+        return aktuelleSprache === "ar" ? "ar-u-nu-latn" : aktuelleSprache;
     }
 
     function zahl(wert, stellen) {
-        var locale = aktuelleSprache === "ar" ? "ar-u-nu-latn" : aktuelleSprache;
+        var locale = gebietsschema();
         return new Intl.NumberFormat(locale, {
             minimumFractionDigits: stellen,
             maximumFractionDigits: stellen
@@ -136,6 +144,12 @@
         if (letztesErgebnis) {
             zeigeErgebnis(letztesErgebnis);
         }
+        zeigeTermine();
+        zeigeDatenquelle();
+        aktualisiereGymHinweis();
+        if (letzteSuche) {
+            zeigeSuche(letzteSuche);
+        }
         if (!fehlerBox.classList.contains("verborgen")) {
             pruefeUndBerechne(false);
         }
@@ -236,15 +250,247 @@
             if (scrollen) fehlerBox.scrollIntoView({ behavior: "smooth", block: "center" });
             return;
         }
+        var neu = !letztesErgebnis || letztesErgebnis.gymnasiumMoeglich !== r.gymnasiumMoeglich;
         letztesErgebnis = r;
         zeigeErgebnis(r);
+        if (neu) {
+            // Filter der Schulsuche an das Ergebnis anpassen
+            document.querySelector('input[name="art"][value="gym"]').checked = r.gymnasiumMoeglich;
+            aktualisiereGymHinweis();
+            if (letzteSuche) sucheSchulen(false);
+        }
         if (scrollen) {
             ergebnis.focus({ preventScroll: true });
             ergebnis.scrollIntoView({ behavior: "smooth", block: "start" });
         }
     }
 
+    // ---------- Termine ----------
+
+    var TERMINE = [
+        { von: "2027-02-08", bis: "2027-02-09", text: "date_probe_anmeldung" },
+        { von: "2027-02-19", text: "date_probe" },
+        { von: "2027-03-03", bis: "2027-03-11", text: "date_anmeldung" }
+    ];
+
+    function datum(iso) {
+        return new Intl.DateTimeFormat(gebietsschema(), {
+            day: "numeric", month: "long", year: "numeric", timeZone: "UTC"
+        }).format(new Date(iso + "T00:00:00Z"));
+    }
+
+    function datumBereich(von, bis) {
+        var format = new Intl.DateTimeFormat(gebietsschema(), {
+            day: "numeric", month: "long", year: "numeric", timeZone: "UTC"
+        });
+        var a = new Date(von + "T00:00:00Z");
+        var b = new Date(bis + "T00:00:00Z");
+        return format.formatRange ? format.formatRange(a, b) : format.format(a) + " – " + format.format(b);
+    }
+
+    function zeigeTermine() {
+        var liste = document.getElementById("terminListe");
+        liste.textContent = "";
+        TERMINE.forEach(function (termin) {
+            var li = document.createElement("li");
+            var wann = document.createElement("strong");
+            wann.className = "termin-datum";
+            wann.textContent = termin.bis ? datumBereich(termin.von, termin.bis) : datum(termin.von);
+            var was = document.createElement("span");
+            was.textContent = t(termin.text);
+            li.appendChild(wann);
+            li.appendChild(was);
+            liste.appendChild(li);
+        });
+    }
+
+    // ---------- Schulen in der Nähe ----------
+
+    var SCHULART_NAMEN = {
+        gym: "Gymnasium",
+        iss: "Integrierte Sekundarschule (ISS)",
+        gms: "Gemeinschaftsschule"
+    };
+    var daten = window.SCHULDATEN || { schulen: [], plz: {}, stand: "" };
+    var letzteSuche = null;
+    var karte = null;
+    var markerSchicht = null;
+
+    function zeigeDatenquelle() {
+        document.getElementById("datenquelle").textContent =
+            t("data_source", { stand: daten.stand ? datum(daten.stand) : "" });
+    }
+
+    function aktualisiereGymHinweis() {
+        var gymAn = document.querySelector('input[name="art"][value="gym"]').checked;
+        var hinweis = document.getElementById("gym-hinweis");
+        var zeigen = gymAn && letztesErgebnis && !letztesErgebnis.gymnasiumMoeglich;
+        hinweis.textContent = zeigen ? "Gymnasium: " + t("status_probe") : "";
+        hinweis.classList.toggle("verborgen", !zeigen);
+    }
+
+    function gewaehlteArten() {
+        return Array.prototype.map.call(
+            document.querySelectorAll('input[name="art"]:checked'),
+            function (el) { return el.value; }
+        );
+    }
+
+    var SCHULEN_PRO_SEITE = 10;
+    var sichtbareSchulen = SCHULEN_PRO_SEITE;
+
+    function sucheSchulen(scrollen) {
+        sichtbareSchulen = SCHULEN_PRO_SEITE;
+        var r = window.Umkreis.suche(daten, {
+            plz: document.getElementById("plz").value,
+            arten: gewaehlteArten(),
+            privat: document.getElementById("privat").checked,
+            radiusKm: Number(document.getElementById("radius").value)
+        });
+        letzteSuche = r;
+        zeigeSuche(r);
+        if (scrollen && r.ok) {
+            document.getElementById("sucheErgebnis").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }
+
+    function zeigeSuche(r) {
+        var fehler = document.getElementById("sucheFehler");
+        var bereich = document.getElementById("sucheErgebnis");
+        if (!r.ok) {
+            fehler.textContent = t(r.fehler);
+            fehler.classList.remove("verborgen");
+            bereich.classList.add("verborgen");
+            return;
+        }
+        fehler.classList.add("verborgen");
+        bereich.classList.remove("verborgen");
+
+        var km = document.getElementById("radius").value;
+        document.getElementById("trefferAnzahl").textContent = r.schulen.length > 0
+            ? t("near_count", { anzahl: r.schulen.length, km: km })
+            : t("near_none");
+
+        var liste = document.getElementById("schulListe");
+        liste.textContent = "";
+        var mehrKnopf = document.getElementById("mehrSchulen");
+        mehrKnopf.classList.toggle("verborgen", r.schulen.length <= sichtbareSchulen);
+        r.schulen.slice(0, sichtbareSchulen).forEach(function (s) {
+            var li = document.createElement("li");
+            li.className = "schule schule-" + s.a;
+
+            var kopf = document.createElement("div");
+            kopf.className = "schule-kopf";
+            var name = document.createElement("strong");
+            name.lang = "de";
+            name.textContent = s.n;
+            var abstand = document.createElement("span");
+            abstand.className = "abstand";
+            abstand.dir = "ltr";
+            abstand.textContent = zahl(s.km, 1) + " km";
+            kopf.appendChild(name);
+            kopf.appendChild(abstand);
+
+            var info = document.createElement("div");
+            info.className = "schule-info";
+            var art = document.createElement("span");
+            art.className = "badge badge-" + s.a;
+            art.lang = "de";
+            art.textContent = SCHULART_NAMEN[s.a];
+            var traeger = document.createElement("span");
+            traeger.className = "traeger";
+            traeger.textContent = s.p ? t("school_private") : t("school_public");
+            info.appendChild(art);
+            info.appendChild(traeger);
+
+            var adresse = document.createElement("div");
+            adresse.className = "adresse";
+            adresse.lang = "de";
+            adresse.textContent = s.s + ", " + s.z + " Berlin" + (s.o ? " (" + s.o + ")" : "");
+
+            li.appendChild(kopf);
+            li.appendChild(info);
+            li.appendChild(adresse);
+
+            if (s.w) {
+                var link = document.createElement("a");
+                link.href = /^https?:\/\//.test(s.w) ? s.w : "https://" + s.w;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = t("website");
+                li.appendChild(link);
+            }
+            liste.appendChild(li);
+        });
+
+        if (karte) {
+            zeichneKarte(r);
+        }
+    }
+
+    var FARBEN = { gym: "#1565c0", iss: "#1b7f3b", gms: "#8e24aa" };
+
+    function zeichneKarte(r) {
+        var L = window.L;
+        markerSchicht.clearLayers();
+        var punkte = [r.mitte];
+        L.circleMarker(r.mitte, { radius: 6, color: "#333", fillOpacity: 0.9 }).addTo(markerSchicht);
+        r.schulen.forEach(function (s) {
+            var m = L.circleMarker([s.lat, s.lon], {
+                radius: 8, color: "#fff", weight: 2, fillColor: FARBEN[s.a], fillOpacity: 0.95
+            });
+            var inhalt = document.createElement("div");
+            var b = document.createElement("strong");
+            b.textContent = s.n;
+            inhalt.appendChild(b);
+            inhalt.appendChild(document.createElement("br"));
+            inhalt.appendChild(document.createTextNode(SCHULART_NAMEN[s.a] + " · " + s.s));
+            m.bindPopup(inhalt);
+            m.addTo(markerSchicht);
+            punkte.push([s.lat, s.lon]);
+        });
+        if (punkte.length > 1) {
+            karte.fitBounds(punkte, { padding: [24, 24], maxZoom: 15 });
+        } else {
+            karte.setView(r.mitte, 14);
+        }
+    }
+
+    function ladeKarte() {
+        var L = window.L;
+        if (!L || karte) return;
+        var el = document.getElementById("karte");
+        el.classList.remove("verborgen");
+        document.getElementById("karteHinweis").classList.add("verborgen");
+        karte = L.map(el, { scrollWheelZoom: false });
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+        }).addTo(karte);
+        markerSchicht = L.layerGroup().addTo(karte);
+        if (letzteSuche && letzteSuche.ok) {
+            zeichneKarte(letzteSuche);
+        }
+    }
+
     // ---------- Ereignisse ----------
+
+    document.getElementById("sucheForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        sucheSchulen(true);
+    });
+
+    document.getElementById("sucheForm").addEventListener("change", function (event) {
+        if (event.target.name === "art") aktualisiereGymHinweis();
+        if (letzteSuche && letzteSuche.ok && event.target.id !== "plz") sucheSchulen(false);
+    });
+
+    document.getElementById("karteLaden").addEventListener("click", ladeKarte);
+
+    document.getElementById("mehrSchulen").addEventListener("click", function () {
+        sichtbareSchulen += SCHULEN_PRO_SEITE;
+        if (letzteSuche) zeigeSuche(letzteSuche);
+    });
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();

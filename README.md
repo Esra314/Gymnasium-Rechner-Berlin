@@ -11,7 +11,10 @@ Gymnasium, Integrierte Sekundarschule (ISS) und Gemeinschaftsschule.
 - Durchschnittsnote aller Fächer (Hauptfächer, Naturwissenschaften und Gesellschaftswissenschaften doppelt)
 - Erklärung zu Gymnasium, ISS, Gemeinschaftsschule und Probeunterricht
 - Erklärtexte auf Deutsch, Englisch, Türkisch, Arabisch (von rechts nach links), Ukrainisch und Russisch
-- Rechenweg zum Aufklappen, Drucken des Ergebnisses
+- Rechenweg zum Aufklappen, Ergebnis als PDF speichern oder drucken
+- Schulen in der Nähe: Postleitzahl eingeben, Filter nach Gymnasium, ISS, Gemeinschaftsschule und Privatschulen,
+  Liste mit Entfernung und Karte (OpenStreetMap, lädt erst nach Klick)
+- Wichtige Termine für den Wechsel und häufige Fragen (FAQ)
 - Keine Daten werden gesendet oder gespeichert, keine Cookies
 - Impressum und Datenschutzerklärung
 
@@ -30,7 +33,11 @@ favicon.svg
 css/style.css
 js/rechner.js       Berechnung (ohne Abhängigkeiten, auch in Node testbar)
 js/i18n.js          Übersetzungen
+js/umkreis.js       Umkreissuche (ohne Abhängigkeiten, testbar)
 js/app.js           Oberfläche
+data/schulen.js     Schulen und Postleitzahlen (erzeugt)
+scripts/            Skript zum Aktualisieren der Schuldaten
+vendor/leaflet/     Kartenbibliothek Leaflet 1.9.4 (BSD-2-Clause)
 tests/              Tests mit node:test
 ```
 
@@ -45,6 +52,16 @@ npm test
 ```
 
 Die Tests laufen auch automatisch bei jedem Push (GitHub Actions).
+
+## Schuldaten aktualisieren
+
+```bash
+npm run schuldaten
+```
+
+Lädt die offenen Daten aus dem Geoportal Berlin (Schulen: Datenlizenz Deutschland – Zero 2.0,
+Postleitzahlen: Amt für Statistik Berlin-Brandenburg, CC BY 3.0 DE) und schreibt `data/schulen.js`.
+Am besten einmal pro Schuljahr ausführen.
 
 ## Neue Sprache hinzufügen
 
