@@ -567,6 +567,23 @@ input[type="checkbox"]:focus-visible {
     border-radius: 8px;
 }
 
+.termin-liste li.allgemein {
+    background: #f4f7fb;
+}
+
+.nicht-verpassen {
+    background: var(--orange-hell);
+    border: 1px solid var(--orange);
+    border-radius: 8px;
+    padding: 4px 16px 14px;
+    margin-bottom: 16px;
+}
+
+.nicht-verpassen h3 {
+    margin: 12px 0 6px;
+    color: var(--orange);
+}
+
 .termin-datum {
     color: var(--blau-dunkel);
 }

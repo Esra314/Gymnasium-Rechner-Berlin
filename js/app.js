@@ -267,10 +267,15 @@
 
     // ---------- Termine ----------
 
+    // Allgemeine Angaben ("meist ...") und feste Termine für den Wechsel 2027
     var TERMINE = [
+        { wann: "tl_when_1", text: "tl_1" },
+        { wann: "tl_when_2", text: "tl_2" },
         { von: "2027-02-08", bis: "2027-02-09", text: "date_probe_anmeldung" },
         { von: "2027-02-19", text: "date_probe" },
-        { von: "2027-03-03", bis: "2027-03-11", text: "date_anmeldung" }
+        { von: "2027-03-03", bis: "2027-03-11", text: "date_anmeldung" },
+        { wann: "tl_when_5", text: "tl_5" },
+        { wann: "tl_when_6", text: "tl_6" }
     ];
 
     function datum(iso) {
@@ -295,7 +300,12 @@
             var li = document.createElement("li");
             var wann = document.createElement("strong");
             wann.className = "termin-datum";
-            wann.textContent = termin.bis ? datumBereich(termin.von, termin.bis) : datum(termin.von);
+            if (termin.wann) {
+                wann.textContent = t(termin.wann);
+                li.className = "allgemein";
+            } else {
+                wann.textContent = termin.bis ? datumBereich(termin.von, termin.bis) : datum(termin.von);
+            }
             var was = document.createElement("span");
             was.textContent = t(termin.text);
             li.appendChild(wann);
