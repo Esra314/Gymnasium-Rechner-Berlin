@@ -530,85 +530,6 @@
         return /^https?:\/\//.test(s.w) ? s.w : "https://" + s.w;
     }
 
-    function baueSchulverzeichnis(s) {
-        var info = schulinfos[s.id];
-        var block = document.createElement("div");
-        block.className = "detail-block sv-block";
-        var h = document.createElement("h4");
-        h.textContent = "🏫 " + t("sv_title");
-        block.appendChild(h);
-
-        var liste = document.createElement("dl");
-        liste.className = "sv-liste";
-        var zeilen = info ? [
-            ["f_lang", info.sp],
-            ["f_ganztag", info.gt ? t("gt_" + info.gt) : ""],
-            ["f_profil", info.pr],
-            ["sv_notes", info.bm],
-            ["sv_ags", info.ag],
-            ["f_essen", info.me]
-        ] : [];
-        zeilen.forEach(function (z) {
-            if (!z[1]) return;
-            var dt = document.createElement("dt");
-            dt.textContent = t(z[0]);
-            var dd = document.createElement("dd");
-            dd.lang = "de";
-            dd.dir = "auto";
-            dd.textContent = z[1];
-            if (z[0] === "f_ganztag") dd.removeAttribute("lang");
-            liste.appendChild(dt);
-            liste.appendChild(dd);
-        });
-        if (info && info.ob) {
-            var dtO = document.createElement("dt");
-            dtO.textContent = "✓";
-            var ddO = document.createElement("dd");
-            ddO.textContent = t("sv_oberstufe");
-            liste.appendChild(dtO);
-            liste.appendChild(ddO);
-        }
-        if (liste.childNodes.length > 0) {
-            block.appendChild(liste);
-        } else {
-            var leer = document.createElement("p");
-            leer.textContent = t("sv_none");
-            block.appendChild(leer);
-        }
-
-        var h5 = document.createElement("h5");
-        h5.textContent = "📅 " + t("sv_dates");
-        block.appendChild(h5);
-        var termine = kommendeTermine(s);
-        if (termine.length > 0) {
-            var ul = document.createElement("ul");
-            ul.className = "sv-termine";
-            termine.forEach(function (x) {
-                var li = document.createElement("li");
-                li.appendChild(neuerLink(x.l, terminText(x)));
-                ul.appendChild(li);
-            });
-            block.appendChild(ul);
-        } else {
-            var keine = document.createElement("p");
-            keine.textContent = t("sv_dates_none");
-            block.appendChild(keine);
-        }
-
-        var links = document.createElement("div");
-        links.className = "kontakt";
-        if (info && info.z) links.appendChild(neuerLink(PORTRAET_URL + encodeURIComponent(info.z), "📄 " + t("sv_portrait")));
-        links.appendChild(neuerLink(KALENDER_URL + encodeURIComponent(s.id), "📅 " + t("sv_calendar")));
-        if (s.w) links.appendChild(neuerLink(webseite(s), "🌐 " + t("website")));
-        block.appendChild(links);
-
-        var hinweis = document.createElement("p");
-        hinweis.className = "hinweis-pruefen";
-        hinweis.textContent = "⚠️ " + t("sv_hint", { datum: infoStand ? datum(infoStand) : "–" });
-        block.appendChild(hinweis);
-        return block;
-    }
-
     function minuten(km, kmh) {
         // Umweg-Faktor 1,3 gegenüber der Luftlinie, auf 5 Minuten gerundet
         return Math.max(5, Math.round((km * 1.3 / kmh) * 60 / 5) * 5);
@@ -637,98 +558,197 @@
         return knopf;
     }
 
-    function baueDetails(s) {
-        var details = document.createElement("details");
-        details.className = "schul-details";
-        var summary = document.createElement("summary");
-        summary.textContent = t("details_school");
-        details.appendChild(summary);
+    var GANZTAG_KURZ = { gebunden: "Gebundener Ganztag", teilgebunden: "Teilgebundener Ganztag", offen: "Offener Ganztag" };
 
-        var weg = document.createElement("div");
-        weg.className = "detail-block";
-        var h = document.createElement("h4");
-        h.textContent = t("travel_title");
-        var zeile = document.createElement("p");
-        zeile.textContent = s.km !== undefined
-            ? t("dist_line", { km: zahl(s.km, 1), fuss: minuten(s.km, 4.5), rad: minuten(s.km, 15) })
-            : "";
-        var link = document.createElement("a");
-        link.href = anfahrtLink(s);
-        link.target = "_blank";
-        link.rel = "noopener";
-        link.textContent = "🚌 " + t("travel_link");
-        var notiz = document.createElement("p");
-        notiz.className = "klein";
-        notiz.textContent = t("travel_note");
-        weg.appendChild(h);
-        weg.appendChild(zeile);
-        weg.appendChild(link);
-        weg.appendChild(notiz);
-        details.appendChild(weg);
-        details.appendChild(baueSchulverzeichnis(s));
+    function element(tag, klasse, text) {
+        var el = document.createElement(tag);
+        if (klasse) el.className = klasse;
+        if (text !== undefined) el.textContent = text;
+        return el;
+    }
 
-        var check = document.createElement("div");
-        check.className = "detail-block";
-        var h2 = document.createElement("h4");
-        h2.textContent = t("check_title");
-        var hinweis = document.createElement("p");
-        hinweis.className = "klein";
-        hinweis.textContent = t("check_hint");
-        check.appendChild(h2);
-        check.appendChild(hinweis);
+    function chip(text, klasse, titel) {
+        var c = element("span", "chip" + (klasse ? " " + klasse : ""), text);
+        if (titel) c.title = titel;
+        return c;
+    }
 
-        var raster = document.createElement("div");
-        raster.className = "check-raster";
-        var vorausgefuellt = false;
-        window.Merkliste.FELDER.forEach(function (feld) {
-            var offiziell = feld === "notizen" ? "" : amtlich(s, feld);
-            if (feld !== "notizen") {
-                // Amtliche Angabe: nur anzeigen, nicht änderbar
-                vorausgefuellt = true;
-                var feldBox = document.createElement("div");
-                feldBox.className = "check-feld check-amtlich";
-                var titel = document.createElement("span");
-                titel.textContent = t(FELD_TEXT[feld]);
-                var wert = document.createElement("p");
-                wert.className = "amtlich-wert";
-                wert.dir = "auto";
-                wert.textContent = offiziell || t("sv_none");
-                if (!offiziell) wert.classList.add("keine-angabe");
-                feldBox.appendChild(titel);
-                feldBox.appendChild(wert);
-                if (offiziell) {
-                    var quelle = document.createElement("small");
-                    quelle.textContent = "🔒 " + t("sv_mark");
-                    feldBox.appendChild(quelle);
-                }
-                raster.appendChild(feldBox);
-                return;
+    // "1. Fremdsprache Englisch, 2. Fremdsprache Englisch" -> Englisch (1./2. Fremdsprache)
+    function sprachChips(text) {
+        var reihenfolge = [];
+        var stufen = {};
+        var sonstige = [];
+        text.split(/,\s*/).forEach(function (teil) {
+            var m = /^(\d)\.\s*Fremdsprache\s+(.+)$/.exec(teil.trim());
+            if (m) {
+                if (!stufen[m[2]]) { stufen[m[2]] = []; reihenfolge.push(m[2]); }
+                if (stufen[m[2]].indexOf(m[1]) < 0) stufen[m[2]].push(m[1]);
+            } else if (teil.trim()) {
+                sonstige.push(teil.trim());
             }
-            var label = document.createElement("label");
-            label.className = "check-feld";
-            var span = document.createElement("span");
-            span.textContent = t(FELD_TEXT[feld]);
-            label.appendChild(span);
-            // Nur "Eigene Notizen" ist ein Eingabefeld
-            var eingabe = document.createElement("textarea");
-            eingabe.rows = 3;
-            eingabe.value = merkliste.notiz(s.id, feld);
-            eingabe.maxLength = 2000;
-            eingabe.addEventListener("change", function () {
-                merkliste.setzeNotiz(s.id, feld, eingabe.value);
-                zeigeVergleich();
-            });
-            label.appendChild(eingabe);
-            raster.appendChild(label);
         });
-        if (vorausgefuellt) {
-            var vorHinweis = document.createElement("p");
-            vorHinweis.className = "klein vorausgefuellt-hinweis";
-            vorHinweis.textContent = "ⓘ " + t("sv_prefilled");
-            check.appendChild(vorHinweis);
+        var chips = reihenfolge.map(function (sprache) {
+            var c = chip(sprache, "chip-sprache");
+            c.lang = "de"; c.dir = "ltr";
+            var stufe = element("small", "", stufen[sprache].sort().join("./") + ". Fremdsprache");
+            c.appendChild(document.createTextNode(" "));
+            c.appendChild(stufe);
+            return c;
+        });
+        sonstige.forEach(function (x) {
+            var c = chip(x, "chip-sprache");
+            c.lang = "de"; c.dir = "ltr";
+            chips.push(c);
+        });
+        return { chips: chips, anzahl: reihenfolge.length || sonstige.length };
+    }
+
+    function chipReihe(chips, max) {
+        var reihe = element("div", "chips");
+        chips.forEach(function (c, i) {
+            if (max && i >= max) c.classList.add("verborgen");
+            reihe.appendChild(c);
+        });
+        if (max && chips.length > max) {
+            var mehr = element("button", "chip chip-mehr", t("more_count", { anzahl: chips.length - max }));
+            mehr.type = "button";
+            mehr.addEventListener("click", function () {
+                reihe.querySelectorAll(".verborgen").forEach(function (c) { c.classList.remove("verborgen"); });
+                mehr.remove();
+            });
+            reihe.appendChild(mehr);
         }
-        check.appendChild(raster);
-        details.appendChild(check);
+        return reihe;
+    }
+
+    function abschnitt(icon, titelSchluessel, inhalt) {
+        var box = element("div", "detail-abschnitt");
+        box.appendChild(element("h4", "", icon + " " + t(titelSchluessel)));
+        box.appendChild(inhalt);
+        return box;
+    }
+
+    // Langer Text: 2 Zeilen, dann "mehr anzeigen"
+    function kurzText(text) {
+        var box = element("div", "kurztext");
+        var p = element("p", "zwei-zeilen", text);
+        p.lang = "de";
+        p.dir = "ltr";
+        box.appendChild(p);
+        if (text.length > 140) {
+            var knopf = element("button", "text-knopf", t("show_more_short"));
+            knopf.type = "button";
+            knopf.addEventListener("click", function () {
+                var offen = p.classList.toggle("zwei-zeilen");
+                knopf.textContent = offen ? t("show_more_short") : t("show_less");
+            });
+            box.appendChild(knopf);
+        }
+        return box;
+    }
+
+    function baueDetails(s) {
+        var info = schulinfos[s.id] || {};
+        var details = element("details", "schul-details");
+        details.appendChild(element("summary", "", t("details_school")));
+        var termine = kommendeTermine(s);
+        var sprachen = info.sp ? sprachChips(info.sp) : { chips: [], anzahl: 0 };
+
+        // 1. Überblick: eine Zeile mit Symbolen
+        var fakten = element("div", "fakten");
+        if (s.km !== undefined) {
+            fakten.appendChild(chip("🚶 " + t("chip_walk", { min: minuten(s.km, 4.5) }), "fakt"));
+            fakten.appendChild(chip("🚲 " + t("chip_bike", { min: minuten(s.km, 15) }), "fakt"));
+        }
+        if (sprachen.anzahl) fakten.appendChild(chip("🗣️ " + t("chip_langs", { anzahl: sprachen.anzahl }), "fakt"));
+        if (info.gt) {
+            var gt = chip("⏰ " + GANZTAG_KURZ[info.gt], "fakt", t("gt_" + info.gt));
+            gt.lang = "de";
+            fakten.appendChild(gt);
+        }
+        if (info.me) {
+            fakten.appendChild(chip(/keine/i.test(info.me) ? "🍽️ " + t("chip_no_lunch") : "🍽️ " + t("chip_lunch"), "fakt"));
+        }
+        if (info.ob) fakten.appendChild(chip("🎓 " + t("chip_abitur"), "fakt"));
+        if (termine.length) fakten.appendChild(chip("📅 " + datum(termine[0].d), "fakt fakt-termin"));
+        details.appendChild(fakten);
+
+        var anfahrt = neuerLink(anfahrtLink(s), "🚌 " + t("travel_link"));
+        anfahrt.className = "anfahrt-link";
+        details.appendChild(anfahrt);
+
+        // 2. Fremdsprachen und Profil als Etiketten
+        if (sprachen.chips.length) details.appendChild(abschnitt("🗣️", "f_lang", chipReihe(sprachen.chips)));
+        if (info.pr) {
+            var profilChips = info.pr.split(/,\s*/).map(function (x) { var c = chip(x, "chip-profil"); c.lang = "de"; c.dir = "ltr"; return c; });
+            details.appendChild(abschnitt("🎭", "f_profil", chipReihe(profilChips, 4)));
+        }
+        if (info.gt) {
+            details.appendChild(abschnitt("⏰", "f_ganztag", element("p", "", t("gt_" + info.gt))));
+        }
+
+        // 3. Termine
+        var terminBox;
+        if (termine.length) {
+            terminBox = element("ul", "sv-termine");
+            termine.forEach(function (x, i) {
+                var li = element("li", i >= 2 ? "verborgen" : "");
+                li.appendChild(neuerLink(x.l, terminText(x)));
+                terminBox.appendChild(li);
+            });
+            if (termine.length > 2) {
+                var mehrTermine = element("button", "text-knopf", t("more_count", { anzahl: termine.length - 2 }));
+                mehrTermine.type = "button";
+                mehrTermine.addEventListener("click", function () {
+                    terminBox.querySelectorAll(".verborgen").forEach(function (x) { x.classList.remove("verborgen"); });
+                    mehrTermine.remove();
+                });
+                var terminHuelle = element("div");
+                terminHuelle.appendChild(terminBox);
+                terminHuelle.appendChild(mehrTermine);
+                terminBox = terminHuelle;
+            }
+        } else {
+            terminBox = element("p", "leise", t("dates_none_short"));
+        }
+        details.appendChild(abschnitt("📅", "f_tdot", terminBox));
+
+        // 4. Mehr: Besonderheiten, AGs, Mittagessen (gekürzt)
+        if (info.bm) details.appendChild(abschnitt("✨", "sv_notes", kurzText(info.bm)));
+        if (info.ag) {
+            var agChips = info.ag.replace(/\s*…$/, "").split(/[,;]\s*/).filter(Boolean)
+                .map(function (x) { var c = chip(x, "chip-ag"); c.lang = "de"; c.dir = "ltr"; return c; });
+            details.appendChild(abschnitt("⚽", "sv_ags", chipReihe(agChips, 6)));
+        }
+        if (!info.sp && !info.gt && !info.pr && !info.me) {
+            details.appendChild(element("p", "leise", t("sv_none")));
+        }
+
+        // 5. Links
+        var links = element("div", "kontakt detail-links");
+        if (info.z) links.appendChild(neuerLink(PORTRAET_URL + encodeURIComponent(info.z), "📄 " + t("sv_portrait")));
+        links.appendChild(neuerLink(KALENDER_URL + encodeURIComponent(s.id), "📅 " + t("sv_calendar")));
+        if (s.w) links.appendChild(neuerLink(webseite(s), "🌐 " + t("website")));
+        details.appendChild(links);
+
+        // 6. Eigene Notizen
+        var notizBox = element("label", "notiz-feld");
+        notizBox.appendChild(element("span", "", "📝 " + t("f_notes")));
+        var eingabe = document.createElement("textarea");
+        eingabe.rows = 3;
+        eingabe.maxLength = 2000;
+        eingabe.value = merkliste.notiz(s.id, "notizen");
+        eingabe.addEventListener("change", function () {
+            merkliste.setzeNotiz(s.id, "notizen", eingabe.value);
+            zeigeVergleich();
+        });
+        notizBox.appendChild(eingabe);
+        notizBox.appendChild(element("small", "", t("notes_device")));
+        details.appendChild(notizBox);
+
+        // 7. Eine Quellenzeile
+        details.appendChild(element("p", "quelle-zeile",
+            "ⓘ " + t("source_line", { datum: infoStand ? datum(infoStand) : "–" })));
         return details;
     }
 

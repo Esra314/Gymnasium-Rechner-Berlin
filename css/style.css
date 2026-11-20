@@ -1770,3 +1770,152 @@ body {
     font-style: italic;
     font-size: 0.9rem;
 }
+
+/* ---------- Schul-Details: ruhig und übersichtlich ---------- */
+.schul-details[open] {
+    padding-bottom: 4px;
+}
+
+.fakten,
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.fakten {
+    margin: 12px 0 6px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    background: #f1f4f8;
+    border: 1px solid #e1e6ee;
+    color: var(--text);
+}
+
+.chip small {
+    font-size: 0.72rem;
+    color: var(--text-leise);
+}
+
+.chip.fakt {
+    background: var(--blau-hell);
+    border-color: transparent;
+    font-weight: 600;
+    color: var(--blau-dunkel);
+}
+
+.chip.fakt-termin {
+    background: var(--orange-hell);
+    color: var(--orange);
+}
+
+.chip-sprache { background: #e8f1fd; border-color: #cfe0f7; }
+.chip-profil  { background: #f3ecfc; border-color: #e2d4f6; }
+.chip-ag      { background: #fff3e2; border-color: #f6dfbd; }
+
+.chip-mehr {
+    cursor: pointer;
+    background: #fff;
+    border-style: dashed;
+    color: var(--blau-dunkel);
+    font-weight: 600;
+    font: inherit;
+    font-size: 0.85rem;
+}
+
+.anfahrt-link {
+    display: inline-block;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.detail-abschnitt {
+    margin-top: 14px;
+}
+
+.detail-abschnitt h4 {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--text-leise);
+}
+
+.detail-abschnitt p {
+    margin: 0;
+    font-size: 0.92rem;
+}
+
+.zwei-zeilen {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.text-knopf {
+    background: none;
+    border: none;
+    padding: 2px 0;
+    min-height: 0;
+    color: var(--blau-dunkel);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.leise {
+    color: var(--text-leise);
+    font-size: 0.9rem;
+}
+
+.detail-links {
+    margin-top: 14px;
+    font-size: 0.9rem;
+}
+
+.notiz-feld {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 14px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.notiz-feld textarea {
+    font: inherit;
+    font-weight: 400;
+    padding: 8px 10px;
+    border: 1px solid var(--rand);
+    border-radius: 8px;
+    resize: vertical;
+    width: 100%;
+}
+
+.notiz-feld small {
+    font-weight: 400;
+    color: var(--text-leise);
+}
+
+.quelle-zeile {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--text-leise);
+}
+
+.chips {
+    align-items: center;
+}
+
+.sv-termine {
+    font-size: 0.9rem;
+}
