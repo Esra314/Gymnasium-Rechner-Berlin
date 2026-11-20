@@ -1135,3 +1135,78 @@ input[type="checkbox"]:focus-visible {
         break-inside: avoid;
     }
 }
+
+/* Angaben aus dem Schulverzeichnis */
+.sv-block {
+    background: var(--blau-hell);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.sv-block h5 {
+    font-size: 0.9rem;
+    margin: 10px 0 4px;
+}
+
+.sv-liste {
+    display: grid;
+    grid-template-columns: minmax(90px, max-content) 1fr;
+    gap: 4px 12px;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.sv-liste dt {
+    font-weight: 600;
+    color: var(--text-leise);
+}
+
+.sv-liste dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.sv-termine {
+    margin: 0 0 6px;
+    padding-inline-start: 1.2em;
+    font-size: 0.9rem;
+}
+
+.sv-termine li {
+    margin-bottom: 4px;
+}
+
+.hinweis-pruefen {
+    margin-top: 8px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    background: var(--orange-hell);
+    border-inline-start: 4px solid var(--orange-rand);
+    border-radius: 6px;
+    color: var(--orange);
+}
+
+.check-feld.vorausgefuellt input,
+.check-feld.vorausgefuellt select,
+.check-feld.vorausgefuellt textarea {
+    background: var(--blau-hell);
+    border-style: dashed;
+}
+
+.vorausgefuellt-hinweis {
+    color: var(--blau-dunkel);
+}
+
+.amtlich {
+    color: var(--text-leise);
+    font-style: italic;
+}
+
+@media (max-width: 480px) {
+    .sv-liste {
+        grid-template-columns: 1fr;
+    }
+    .sv-liste dd {
+        margin-bottom: 6px;
+    }
+}

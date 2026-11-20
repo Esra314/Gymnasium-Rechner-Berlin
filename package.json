@@ -1,12 +1,13 @@
 {
-  "name": "gymnasium-rechner-berlin",
+  "name": "oberschul-helfer-berlin",
   "version": "1.0.0",
   "private": true,
-  "description": "Unverbindlicher Rechner für die Förderprognose beim Übergang in Klasse 7 in Berlin",
+  "description": "Oberschul-Helfer Berlin: Notenrechner (Durchschnitt Klasse 5/6, Förderprognose) und Oberschulsuche in Berlin",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "schuldaten": "node scripts/schuldaten-laden.mjs",
-    "texte": "node scripts/texte-einsetzen.js"
+    "texte": "node scripts/texte-einsetzen.js",
+    "schulinfos": "node scripts/schulinfos-erstellen.mjs"
   },
   "license": "UNLICENSED"
 }

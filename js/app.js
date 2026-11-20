@@ -477,6 +477,153 @@
         essen: "f_essen", tdot: "f_tdot", notizen: "f_notes"
     };
 
+    // Angaben aus dem Schulverzeichnis und Termine aus dem Kalender (data/schulinfos.js)
+    var schulinfos = (window.SCHULINFOS && window.SCHULINFOS.schulen) || {};
+    var infoStand = (window.SCHULINFOS && window.SCHULINFOS.stand) || "";
+    var PORTRAET_URL = "https://www.bildung.berlin.de/Schulverzeichnis/Schulportrait.aspx?IDSchulzweig=";
+    var KALENDER_URL = "https://www.berlin.de/land/kalender/index.php?c=79&kategorie%5B47%5D=109&stichwort=";
+
+    function heuteIso() {
+        var d = new Date();
+        var mm = ("0" + (d.getMonth() + 1)).slice(-2);
+        var tt = ("0" + d.getDate()).slice(-2);
+        return d.getFullYear() + "-" + mm + "-" + tt;
+    }
+
+    function kommendeTermine(s) {
+        var info = schulinfos[s.id];
+        if (!info || !info.td) return [];
+        var heute = heuteIso();
+        return info.td.filter(function (x) { return x.d >= heute; });
+    }
+
+    function terminText(x) {
+        var zeit = x.v ? ", " + x.v + (x.b ? "–" + x.b : "") : "";
+        return t("td_" + x.a) + ": " + datum(x.d) + zeit;
+    }
+
+    // Text, wie er im Schulverzeichnis steht (für Vergleich und Details)
+    function amtlich(s, feld) {
+        var info = schulinfos[s.id];
+        if (!info) return "";
+        if (feld === "sprachen") return info.sp || "";
+        if (feld === "ganztag") return info.gt ? t("gt_" + info.gt) : "";
+        if (feld === "profil") return info.pr || "";
+        if (feld === "essen") return info.me || "";
+        if (feld === "tdot") return kommendeTermine(s).map(terminText).join("; ");
+        return "";
+    }
+
+    // Vorschlag für die Checkliste, solange die Familie selbst nichts eingetragen hat
+    function vorschlag(s, feld) {
+        var info = schulinfos[s.id];
+        if (!info) return "";
+        if (feld === "ganztag") {
+            if (info.gt === "gebunden") return "ja";
+            return info.gt ? "teilweise" : "";
+        }
+        if (feld === "essen") {
+            if (!info.me) return "";
+            return /keine/i.test(info.me) ? "nein" : "ja";
+        }
+        if (feld === "tdot") {
+            var naechster = kommendeTermine(s)[0];
+            return naechster ? terminText(naechster) : "";
+        }
+        return amtlich(s, feld);
+    }
+
+    function neuerLink(href, text) {
+        var a = document.createElement("a");
+        a.href = href;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = text;
+        return a;
+    }
+
+    function webseite(s) {
+        return /^https?:\/\//.test(s.w) ? s.w : "https://" + s.w;
+    }
+
+    function baueSchulverzeichnis(s) {
+        var info = schulinfos[s.id];
+        var block = document.createElement("div");
+        block.className = "detail-block sv-block";
+        var h = document.createElement("h4");
+        h.textContent = "🏫 " + t("sv_title");
+        block.appendChild(h);
+
+        var liste = document.createElement("dl");
+        liste.className = "sv-liste";
+        var zeilen = info ? [
+            ["f_lang", info.sp],
+            ["f_ganztag", info.gt ? t("gt_" + info.gt) : ""],
+            ["f_profil", info.pr],
+            ["sv_notes", info.bm],
+            ["sv_ags", info.ag],
+            ["f_essen", info.me]
+        ] : [];
+        zeilen.forEach(function (z) {
+            if (!z[1]) return;
+            var dt = document.createElement("dt");
+            dt.textContent = t(z[0]);
+            var dd = document.createElement("dd");
+            dd.lang = "de";
+            dd.textContent = z[1];
+            if (z[0] === "f_ganztag") dd.removeAttribute("lang");
+            liste.appendChild(dt);
+            liste.appendChild(dd);
+        });
+        if (info && info.ob) {
+            var dtO = document.createElement("dt");
+            dtO.textContent = "✓";
+            var ddO = document.createElement("dd");
+            ddO.textContent = t("sv_oberstufe");
+            liste.appendChild(dtO);
+            liste.appendChild(ddO);
+        }
+        if (liste.childNodes.length > 0) {
+            block.appendChild(liste);
+        } else {
+            var leer = document.createElement("p");
+            leer.textContent = t("sv_none");
+            block.appendChild(leer);
+        }
+
+        var h5 = document.createElement("h5");
+        h5.textContent = "📅 " + t("sv_dates");
+        block.appendChild(h5);
+        var termine = kommendeTermine(s);
+        if (termine.length > 0) {
+            var ul = document.createElement("ul");
+            ul.className = "sv-termine";
+            termine.forEach(function (x) {
+                var li = document.createElement("li");
+                li.appendChild(neuerLink(x.l, terminText(x)));
+                ul.appendChild(li);
+            });
+            block.appendChild(ul);
+        } else {
+            var keine = document.createElement("p");
+            keine.textContent = t("sv_dates_none");
+            block.appendChild(keine);
+        }
+
+        var links = document.createElement("div");
+        links.className = "kontakt";
+        if (info && info.z) links.appendChild(neuerLink(PORTRAET_URL + encodeURIComponent(info.z), "📄 " + t("sv_portrait")));
+        links.appendChild(neuerLink(KALENDER_URL + encodeURIComponent(s.id), "📅 " + t("sv_calendar")));
+        if (s.w) links.appendChild(neuerLink(webseite(s), "🌐 " + t("website")));
+        block.appendChild(links);
+
+        var hinweis = document.createElement("p");
+        hinweis.className = "hinweis-pruefen";
+        hinweis.textContent = "⚠️ " + t("sv_hint", { datum: infoStand ? datum(infoStand) : "–" });
+        block.appendChild(hinweis);
+        return block;
+    }
+
     function minuten(km, kmh) {
         // Umweg-Faktor 1,3 gegenüber der Luftlinie, auf 5 Minuten gerundet
         return Math.max(5, Math.round((km * 1.3 / kmh) * 60 / 5) * 5);
@@ -541,6 +688,7 @@
         weg.appendChild(link);
         weg.appendChild(notiz);
         details.appendChild(weg);
+        details.appendChild(baueSchulverzeichnis(s));
 
         var check = document.createElement("div");
         check.className = "detail-block";
@@ -554,6 +702,7 @@
 
         var raster = document.createElement("div");
         raster.className = "check-raster";
+        var vorausgefuellt = false;
         window.Merkliste.FELDER.forEach(function (feld) {
             var label = document.createElement("label");
             label.className = "check-feld";
@@ -576,15 +725,29 @@
                 eingabe = document.createElement("input");
                 eingabe.type = "text";
             }
-            eingabe.value = merkliste.notiz(s.id, feld);
+            var eigene = merkliste.notiz(s.id, feld);
+            var vorschlagWert = eigene ? "" : vorschlag(s, feld);
+            eingabe.value = eigene || vorschlagWert;
+            if (vorschlagWert) {
+                vorausgefuellt = true;
+                label.classList.add("vorausgefuellt");
+                eingabe.title = t("sv_mark");
+            }
             eingabe.maxLength = 2000;
             eingabe.addEventListener("change", function () {
                 merkliste.setzeNotiz(s.id, feld, eingabe.value);
+                label.classList.remove("vorausgefuellt");
                 zeigeVergleich();
             });
             label.appendChild(eingabe);
             raster.appendChild(label);
         });
+        if (vorausgefuellt) {
+            var vorHinweis = document.createElement("p");
+            vorHinweis.className = "klein vorausgefuellt-hinweis";
+            vorHinweis.textContent = "ⓘ " + t("sv_prefilled");
+            check.appendChild(vorHinweis);
+        }
         check.appendChild(raster);
         details.appendChild(check);
         return details;
@@ -637,7 +800,17 @@
             }]
         ];
         window.Merkliste.FELDER.forEach(function (feld) {
-            zeilen.push([FELD_TEXT[feld], function (s) { return wertAnzeige(feld, merkliste.notiz(s.id, feld)); }]);
+            zeilen.push([FELD_TEXT[feld], function (s) {
+                var eigene = merkliste.notiz(s.id, feld);
+                if (eigene) return wertAnzeige(feld, eigene);
+                var offiziell = amtlich(s, feld);
+                if (!offiziell) return "–";
+                var span = document.createElement("span");
+                span.className = "amtlich";
+                span.title = t("sv_mark");
+                span.textContent = offiziell + " ⓘ";
+                return span;
+            }]);
         });
         zeilen.push(["website", function (s) {
             if (!s.w) return "–";
@@ -669,6 +842,8 @@
             rumpf.appendChild(tr);
         });
         tabelle.appendChild(rumpf);
+        document.getElementById("vergleichLegende").textContent = "ⓘ = " + t("sv_mark") + ". "
+            + t("sv_dates_source", { datum: infoStand ? datum(infoStand) : "–" });
     }
 
     document.getElementById("vergleichLeeren").addEventListener("click", function () {

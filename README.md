@@ -94,6 +94,21 @@ Lädt die offenen Daten aus dem Geoportal Berlin (Schulen: Datenlizenz Deutschla
 Postleitzahlen: Amt für Statistik Berlin-Brandenburg, CC BY 3.0 DE) und schreibt `data/schulen.js`.
 Am besten einmal pro Schuljahr ausführen.
 
+### Schulangebote und Termine (`data/schulinfos.js`)
+
+Fremdsprachen, Ganztag, Profil, AGs und Mittagessen kommen aus den Schulporträts des
+[Berliner Schulverzeichnisses](https://www.bildung.berlin.de/Schulverzeichnis/), Tage der offenen Tür und
+Infoabende aus dem [Kalender der Senatsverwaltung](https://www.berlin.de/land/kalender/index.php?c=79).
+Die App zeigt sie mit Stand und dem Hinweis „bitte prüfen“ an und füllt damit die Checkliste vor.
+
+```bash
+python3 scripts/schulverzeichnis_laden.py roh/      # schreibt roh/portraets.json (ca. 10 Min.)
+python3 scripts/kalender_laden.py roh/termine.json  # Termine ab heute
+npm run schulinfos -- roh/portraets.json roh/termine.json
+```
+
+Vor jeder Anmelderunde (Herbst) neu laden: Die Schulen tragen ihre Termine laufend nach.
+
 ## Neue Sprache hinzufügen
 
 1. In `js/i18n.js` die Sprache in `SPRACHEN` eintragen.
@@ -105,7 +120,7 @@ Am besten einmal pro Schuljahr ausführen.
 Repository → Settings → Pages → Source: „Deploy from branch“, Branch `main`, Ordner `/ (root)`.
 Vorher in `impressum.html` und `datenschutz.html` die gelb markierten Platzhalter ausfüllen.
 
-Die Adresse `https://esra314.github.io/Gymnasium-Rechner-Berlin/` steht in `index.html`
+Die Adresse `https://esra314.github.io/Oberschul-Helfer-Berlin/` steht in `index.html`
 (canonical, hreflang, og:url, og:image), `sitemap.xml` und `robots.txt`. Bei einer eigenen Domain dort anpassen.
 Danach die `sitemap.xml` in der Google Search Console einreichen.
 

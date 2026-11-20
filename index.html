@@ -13,20 +13,20 @@
     <meta property="og:title" content="Oberschul-Helfer Berlin – Von der Grundschule zur Oberschule">
     <meta property="og:description" content="Welche Oberschule ist nach Klasse 6 möglich? Durchschnitt aus Klasse 5 und 6 berechnen und Schulen in der Nähe finden.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://esra314.github.io/Gymnasium-Rechner-Berlin/">
-    <meta property="og:image" content="https://esra314.github.io/Gymnasium-Rechner-Berlin/icons/og-bild.png">
+    <meta property="og:url" content="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <meta property="og:image" content="https://esra314.github.io/Oberschul-Helfer-Berlin/icons/og-bild.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="de_DE">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/">
-    <link rel="alternate" hreflang="de" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/">
-    <link rel="alternate" hreflang="en" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/?lang=en">
-    <link rel="alternate" hreflang="tr" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/?lang=tr">
-    <link rel="alternate" hreflang="ar" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/?lang=ar">
-    <link rel="alternate" hreflang="uk" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/?lang=uk">
-    <link rel="alternate" hreflang="ru" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/?lang=ru">
-    <link rel="alternate" hreflang="x-default" href="https://esra314.github.io/Gymnasium-Rechner-Berlin/">
+    <link rel="canonical" href="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <link rel="alternate" hreflang="de" href="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <link rel="alternate" hreflang="en" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=en">
+    <link rel="alternate" hreflang="tr" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=tr">
+    <link rel="alternate" hreflang="ar" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=ar">
+    <link rel="alternate" hreflang="uk" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=uk">
+    <link rel="alternate" hreflang="ru" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=ru">
+    <link rel="alternate" hreflang="x-default" href="https://esra314.github.io/Oberschul-Helfer-Berlin/">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -241,6 +241,7 @@
             <div class="tabelle-scroll">
                 <table id="vergleichTabelle" class="vergleich-tabelle"></table>
             </div>
+            <p id="vergleichLegende" class="klein"></p>
             <div class="knoepfe nur-bildschirm">
                 <button type="button" id="vergleichLeeren" class="zweitrangig" data-i18n="compare_clear">Alle löschen</button>
             </div>
@@ -314,7 +315,7 @@
     <aside class="fuss-hinweise">
         <p data-i18n="disclaimer">Unverbindliche Berechnung, ohne Gewähr. Verbindlich ist nur die Förderprognose der Grundschule. Stand der Regeln: November 2026.</p>
         <p data-i18n="privacy_note">Ihre Eingaben bleiben auf Ihrem Gerät. Nichts wird gesendet oder gespeichert.</p>
-        <p lang="de">Datenquellen: Schulen – Geoportal Berlin (dl-de/zero-2-0); Postleitzahlen – Amt für Statistik Berlin-Brandenburg 2026 / Postleitzahlen (<a href="https://creativecommons.org/licenses/by/3.0/de/" target="_blank" rel="noopener">CC BY 3.0 DE</a>); Karte – © OpenStreetMap-Mitwirkende.</p>
+        <p lang="de">Datenquellen: Schulen – Geoportal Berlin (dl-de/zero-2-0); Postleitzahlen – Amt für Statistik Berlin-Brandenburg 2026 / Postleitzahlen (<a href="https://creativecommons.org/licenses/by/3.0/de/" target="_blank" rel="noopener">CC BY 3.0 DE</a>); Schulangebote – <a href="https://www.bildung.berlin.de/Schulverzeichnis/" target="_blank" rel="noopener">Berliner Schulverzeichnis</a>; Termine – <a href="https://www.berlin.de/land/kalender/index.php?c=79" target="_blank" rel="noopener">Kalender der Senatsverwaltung für Bildung, Jugend und Familie</a> (ohne Gewähr, bitte bei der Schule prüfen); Karte – © OpenStreetMap-Mitwirkende.</p>
         <p>
             <a href="https://www.berlin.de/sen/bildung/schule/bildungswege/uebergang-weiterfuehrende-schule/wechsel-zur-7-klasse/"
                target="_blank" rel="noopener" data-i18n="official_link">Offizielle Informationen der Senatsverwaltung für Bildung</a>
@@ -330,6 +331,7 @@
 
 <script src="vendor/leaflet/leaflet.js" defer></script>
 <script src="data/schulen.js"></script>
+<script src="data/schulinfos.js"></script>
 <script src="js/rechner.js"></script>
 <script src="js/umkreis.js"></script>
 <script src="js/merkliste.js"></script>
