@@ -475,8 +475,6 @@
     var schuleNachId = {};
     daten.schulen.forEach(function (s) { schuleNachId[s.id] = s; });
 
-    var AUSWAHL_FELDER = { ganztag: true, essen: true };
-    var AUSWAHL_WERTE = [["", "opt_unknown"], ["ja", "opt_yes"], ["teilweise", "opt_partly"], ["nein", "opt_no"]];
     var FELD_TEXT = {
         sprachen: "f_lang", ganztag: "f_ganztag", profil: "f_profil",
         essen: "f_essen", tdot: "f_tdot", notizen: "f_notes"
@@ -639,14 +637,6 @@
         return knopf;
     }
 
-    function wertAnzeige(feld, wert) {
-        if (AUSWAHL_FELDER[feld]) {
-            var paar = AUSWAHL_WERTE.filter(function (p) { return p[0] === wert; })[0];
-            return wert && paar ? t(paar[1]) : "–";
-        }
-        return wert || "–";
-    }
-
     function baueDetails(s) {
         var details = document.createElement("details");
         details.className = "schul-details";
@@ -692,7 +682,7 @@
         var vorausgefuellt = false;
         window.Merkliste.FELDER.forEach(function (feld) {
             var offiziell = feld === "notizen" ? "" : amtlich(s, feld);
-            if (offiziell) {
+            if (feld !== "notizen") {
                 // Amtliche Angabe: nur anzeigen, nicht änderbar
                 vorausgefuellt = true;
                 var feldBox = document.createElement("div");
@@ -702,12 +692,15 @@
                 var wert = document.createElement("p");
                 wert.className = "amtlich-wert";
                 wert.dir = "auto";
-                wert.textContent = offiziell;
-                var quelle = document.createElement("small");
-                quelle.textContent = "🔒 " + t("sv_mark");
+                wert.textContent = offiziell || t("sv_none");
+                if (!offiziell) wert.classList.add("keine-angabe");
                 feldBox.appendChild(titel);
                 feldBox.appendChild(wert);
-                feldBox.appendChild(quelle);
+                if (offiziell) {
+                    var quelle = document.createElement("small");
+                    quelle.textContent = "🔒 " + t("sv_mark");
+                    feldBox.appendChild(quelle);
+                }
                 raster.appendChild(feldBox);
                 return;
             }
@@ -716,22 +709,9 @@
             var span = document.createElement("span");
             span.textContent = t(FELD_TEXT[feld]);
             label.appendChild(span);
-            var eingabe;
-            if (AUSWAHL_FELDER[feld]) {
-                eingabe = document.createElement("select");
-                AUSWAHL_WERTE.forEach(function (p) {
-                    var o = document.createElement("option");
-                    o.value = p[0];
-                    o.textContent = t(p[1]);
-                    eingabe.appendChild(o);
-                });
-            } else if (feld === "notizen") {
-                eingabe = document.createElement("textarea");
-                eingabe.rows = 2;
-            } else {
-                eingabe = document.createElement("input");
-                eingabe.type = "text";
-            }
+            // Nur "Eigene Notizen" ist ein Eingabefeld
+            var eingabe = document.createElement("textarea");
+            eingabe.rows = 3;
             eingabe.value = merkliste.notiz(s.id, feld);
             eingabe.maxLength = 2000;
             eingabe.addEventListener("change", function () {
@@ -812,7 +792,8 @@
         window.Merkliste.FELDER.forEach(function (feld) {
             zeilen.push([FELD_TEXT[feld], function (s) {
                 var offiziell = feld === "notizen" ? "" : amtlich(s, feld);
-                if (!offiziell) return wertAnzeige(feld, merkliste.notiz(s.id, feld));
+                if (feld === "notizen") return merkliste.notiz(s.id, feld) || "–";
+                if (!offiziell) return "–";
                 var span = document.createElement("span");
                 span.className = "amtlich";
                 span.title = t("sv_mark");

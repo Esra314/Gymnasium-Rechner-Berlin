@@ -5,7 +5,7 @@
  * vom Server (Updates sind sofort sichtbar). Nur ohne Internet wird die
  * gespeicherte Kopie genutzt. VERSION nur erhöhen, wenn sich die Liste DATEIEN ändert.
  */
-const VERSION = "v4";
+const VERSION = "v5";
 const CACHE = "oberschul-helfer-" + VERSION;
 
 const DATEIEN = [
@@ -52,8 +52,13 @@ self.addEventListener("fetch", (event) => {
     if (anfrage.method !== "GET" || new URL(anfrage.url).origin !== self.location.origin) {
         return;
     }
+    // "no-cache": immer beim Server nachfragen, ob es eine neuere Fassung gibt
+    // (sonst nutzt der Browser bis zu 10 Minuten eine alte Kopie aus dem HTTP-Cache)
+    const netz = anfrage.mode === "navigate"
+        ? fetch(anfrage.url, { cache: "no-cache", credentials: "same-origin" })
+        : fetch(anfrage, { cache: "no-cache" });
     event.respondWith(
-        fetch(anfrage)
+        netz
             .then((antwort) => {
                 if (antwort.ok && antwort.type === "basic") {
                     const kopie = antwort.clone();

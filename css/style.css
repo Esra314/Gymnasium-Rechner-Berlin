@@ -1764,3 +1764,9 @@ body {
 .schulart strong.art-gms {
     font-weight: 700;
 }
+
+.check-amtlich .keine-angabe {
+    color: var(--text-leise);
+    font-style: italic;
+    font-size: 0.9rem;
+}
