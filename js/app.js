@@ -794,7 +794,13 @@
         tabelle.appendChild(kopf);
 
         var zeilen = [
-            ["compare_type", function (s) { return SCHULART_NAMEN[s.a]; }],
+            ["compare_type", function (s) {
+                var art = document.createElement("span");
+                art.className = "art-" + s.a;
+                art.lang = "de";
+                art.textContent = SCHULART_NAMEN[s.a];
+                return art;
+            }],
             ["compare_carrier", function (s) { return s.p ? t("school_private") : t("school_public"); }],
             ["compare_area", function (s) { return s.o || "–"; }],
             ["compare_distance", function (s) {
@@ -871,7 +877,11 @@
             b.textContent = s.n;
             inhalt.appendChild(b);
             inhalt.appendChild(document.createElement("br"));
-            inhalt.appendChild(document.createTextNode(SCHULART_NAMEN[s.a] + " · " + s.s));
+            var artText = document.createElement("span");
+            artText.className = "art-" + s.a;
+            artText.textContent = SCHULART_NAMEN[s.a];
+            inhalt.appendChild(artText);
+            inhalt.appendChild(document.createTextNode(" · " + s.s));
             inhalt.appendChild(document.createElement("br"));
             var zurListe = document.createElement("button");
             zurListe.type = "button";

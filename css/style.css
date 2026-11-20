@@ -1743,3 +1743,24 @@ body {
     font-weight: 400;
     color: var(--text-leise);
 }
+
+/* Schularten überall in den Farben der Karte */
+.art-gym { color: #1565c0; font-weight: 600; }
+.art-iss { color: #1b7f3b; font-weight: 600; }
+.art-gms { color: #8e24aa; font-weight: 600; }
+
+.schalter.art-gym input { accent-color: #1565c0; }
+.schalter.art-iss input { accent-color: #1b7f3b; }
+.schalter.art-gms input { accent-color: #8e24aa; }
+
+.schalter .punkt {
+    margin-inline-start: 0;
+    margin-inline-end: 2px;
+    vertical-align: -1px;
+}
+
+.schulart strong.art-gym,
+.schulart strong.art-iss,
+.schulart strong.art-gms {
+    font-weight: 700;
+}
