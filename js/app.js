@@ -263,8 +263,8 @@
         letztesErgebnis = r;
         zeigeErgebnis(r);
         if (neu) {
-            // Filter der Schulsuche an das Ergebnis anpassen
-            document.querySelector('input[name="art"][value="gym"]').checked = r.gymnasiumMoeglich;
+            // Alle Schularten bleiben ausgewählt (alle führen zum Abitur);
+            // beim Gymnasium steht nur ein Hinweis zum Probeunterricht.
             aktualisiereGymHinweis();
             if (letzteSuche) sucheSchulen(false);
         }

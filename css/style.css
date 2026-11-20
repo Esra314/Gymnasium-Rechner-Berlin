@@ -1949,7 +1949,8 @@ body {
         radial-gradient(circle at 8% 10%, rgba(160, 233, 255, 0.45) 0, transparent 38%),
         radial-gradient(circle at 92% 8%, rgba(225, 175, 209, 0.55) 0, transparent 40%),
         radial-gradient(circle at 75% 100%, rgba(255, 230, 230, 0.35) 0, transparent 45%),
-        linear-gradient(135deg, #0077c8 0%, #3f7cc4 35%, #7469B6 70%, #AD88C6 100%);
+        linear-gradient(135deg, rgba(0, 119, 200, 0.93) 0%, rgba(63, 124, 196, 0.88) 35%, rgba(116, 105, 182, 0.9) 70%, rgba(173, 136, 198, 0.92) 100%),
+        url("../img/fotos/berlin-stadt.webp") center 70% / cover no-repeat;
     box-shadow: 0 20px 40px -24px rgba(116, 105, 182, 0.9);
     display: grid;
     grid-template-columns: 1.3fr 1fr;
@@ -2196,4 +2197,68 @@ html[data-ansicht]:not([data-ansicht="rechner"]) .hero-titel {
     --orange: #8a3567;
     --orange-hell: #FFE6E6;
     --orange-rand: #E1AFD1;
+}
+
+
+/* Fotos (CC0, Wikimedia Commons – siehe img/fotos/QUELLEN.md) */
+.ansicht-foto {
+    display: none;
+    width: calc(100% + 40px);
+    height: 150px;
+    margin: -20px -20px 18px;
+    object-fit: cover;
+    border-radius: 14px 14px 0 0;
+}
+
+.mit-ansichten .ansicht.aktiv > .ansicht-foto {
+    display: block;
+}
+
+#rechner > .ansicht-foto { object-position: center 50%; }
+#schulsuche > .ansicht-foto { object-position: center 35%; }
+#ratgeber > .ansicht-foto { object-position: center 40%; }
+#vergleich > .ansicht-foto { object-position: center 45%; }
+#fragen > .ansicht-foto { object-position: center 40%; }
+
+@media (max-width: 600px) {
+    .ansicht-foto {
+        width: calc(100% + 24px);
+        height: 110px;
+        margin: -18px -12px 14px;
+    }
+}
+
+/* Ergebnis: alle Schularten gleichwertig, jede in ihrer Farbe */
+.ergebnis-lob {
+    margin: 18px 0 6px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(120deg, #CDF5FD, #FFE6E6);
+    color: #2d2a5a;
+    font-weight: 600;
+}
+
+.ergebnis-lob::before {
+    content: "🎉 ";
+}
+
+.schulart,
+.schulart.ok,
+.schulart.bedingt {
+    border-inline-start-color: var(--art);
+    background: var(--art-hell);
+}
+
+#karte-gym { --art: #1565c0; --art-hell: #eef4fd; }
+#karte-iss { --art: #1b7f3b; --art-hell: #eef8f1; }
+#karte-gms { --art: #8e24aa; --art-hell: #f7eefa; }
+
+.schulart.ok .status,
+.schulart.bedingt .status {
+    color: var(--art);
+    font-weight: 700;
+}
+
+.schulart .status::before {
+    content: "✓ ";
 }
