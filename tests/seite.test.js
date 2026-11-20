@@ -29,12 +29,16 @@ test("Keine Inline-Skripte und keine fremden Skripte in index.html", () => {
     }
 });
 
-test("Menü-Links zeigen auf vorhandene Abschnitte", () => {
-    const ziele = [...html.matchAll(/class="sprungmenue[\s\S]*?<\/nav>/g)][0][0]
+test("Menü-Links zeigen auf die vier Bereiche", () => {
+    const ziele = [...html.matchAll(/class="hauptmenue[\s\S]*?<\/nav>/g)][0][0]
         .match(/href="#([\w-]+)"/g).map((h) => h.slice(7, -1));
-    assert.equal(ziele.length, 5);
+    assert.deepEqual(ziele, ["rechner", "schulsuche", "vergleich", "ratgeber"]);
     for (const id of ziele) {
-        assert.match(html, new RegExp('id="' + id + '"'), id);
+        assert.match(html, new RegExp('id="' + id + '" class="[^"]*\\bansicht\\b'), id);
+    }
+    // Weiter-Links zeigen ebenfalls auf Bereiche
+    for (const [, id] of html.matchAll(/class="weiter[^"]*" href="#([\w-]+)"/g)) {
+        assert.ok(ziele.includes(id), id);
     }
 });
 

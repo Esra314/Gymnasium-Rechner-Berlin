@@ -1210,3 +1210,191 @@ input[type="checkbox"]:focus-visible {
         margin-bottom: 6px;
     }
 }
+
+/* ---------- Hauptmenü: 4 Schritte ---------- */
+
+.hauptmenue {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 0 -32px 24px;
+    padding: 10px 32px;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid #e6edf5;
+    border-bottom: 1px solid #e6edf5;
+    box-shadow: 0 6px 14px -12px rgba(0, 0, 0, 0.35);
+}
+
+.hauptmenue a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    color: var(--blau-dunkel);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    background: var(--blau-hell);
+    border: 1px solid transparent;
+}
+
+.hauptmenue a:hover {
+    border-color: var(--blau);
+}
+
+.hauptmenue a[aria-current="page"] {
+    background: var(--blau);
+    color: #fff;
+}
+
+.tab-nr {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--blau);
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid var(--blau);
+}
+
+.zaehler {
+    position: absolute;
+    top: -6px;
+    inset-inline-end: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--orange-rand);
+    color: #4a2a00;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+.ansicht,
+.mit-ansichten .ansicht [id] {
+    scroll-margin-top: 84px;
+}
+
+.mit-ansichten .ansicht {
+    display: none;
+}
+
+.mit-ansichten .ansicht.aktiv {
+    display: block;
+}
+
+.mit-ansichten .ansicht.abschnitt {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.mit-ansichten #ratgeber > .abschnitt:first-child {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.ansicht-titel {
+    margin-bottom: 10px;
+}
+
+.weiter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    min-height: 48px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: var(--gruen-hell);
+    border: 1px solid #b9dcc6;
+    color: var(--gruen);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.weiter::after {
+    content: "→";
+}
+
+[dir="rtl"] .weiter::after {
+    content: "←";
+}
+
+.weiter:hover {
+    border-color: var(--gruen);
+}
+
+/* Handy: Menü als Leiste unten, wie bei einer App */
+@media (max-width: 600px) {
+    .hauptmenue {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+        gap: 4px;
+        border-bottom: none;
+        box-shadow: 0 -4px 14px -8px rgba(0, 0, 0, 0.3);
+    }
+
+    .hauptmenue a {
+        flex-direction: column;
+        gap: 2px;
+        min-height: 56px;
+        padding: 4px 2px;
+        font-size: 0.72rem;
+        background: transparent;
+    }
+
+    .hauptmenue a[aria-current="page"] {
+        background: var(--blau-hell);
+        color: var(--blau-dunkel);
+    }
+
+    .hauptmenue a[aria-current="page"] .tab-nr {
+        background: var(--blau);
+        color: #fff;
+    }
+
+    .zaehler {
+        top: 0;
+        inset-inline-end: 8px;
+    }
+
+    body {
+        padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+
+    .ansicht,
+    .mit-ansichten .ansicht [id] {
+        scroll-margin-top: 8px;
+    }
+}
+
+@media print {
+    .hauptmenue,
+    .weiter {
+        display: none !important;
+    }
+}

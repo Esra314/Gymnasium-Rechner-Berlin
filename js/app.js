@@ -570,6 +570,7 @@
             dt.textContent = t(z[0]);
             var dd = document.createElement("dd");
             dd.lang = "de";
+            dd.dir = "auto";
             dd.textContent = z[1];
             if (z[0] === "f_ganztag") dd.removeAttribute("lang");
             liste.appendChild(dt);
@@ -755,6 +756,11 @@
 
     function zeigeVergleich() {
         var ids = merkliste.ids().filter(function (id) { return schuleNachId[id]; });
+        var zaehler = document.getElementById("merkZaehler");
+        if (zaehler) {
+            zaehler.textContent = ids.length ? String(ids.length) : "";
+            zaehler.classList.toggle("verborgen", ids.length === 0);
+        }
         document.getElementById("vergleichLeer").classList.toggle("verborgen", ids.length > 0);
         document.getElementById("vergleichBereich").classList.toggle("verborgen", ids.length === 0);
         var tabelle = document.getElementById("vergleichTabelle");
@@ -831,6 +837,7 @@
             tr.appendChild(th);
             schulen.forEach(function (s) {
                 var td = document.createElement("td");
+                td.dir = "auto";
                 var inhalt = z[1](s);
                 if (typeof inhalt === "string") {
                     td.textContent = inhalt;
@@ -962,7 +969,51 @@
         });
     }
 
+    // ---------- Menü: immer nur ein Bereich sichtbar ----------
+
+    var ANSICHTEN = Array.prototype.slice.call(document.querySelectorAll(".ansicht"));
+    var menueLinks = Array.prototype.slice.call(document.querySelectorAll("#hauptmenue a"));
+
+    function zeigeAnsicht(id, ziel, scrollen) {
+        document.documentElement.classList.add("mit-ansichten");
+        ANSICHTEN.forEach(function (el) { el.classList.toggle("aktiv", el.id === id); });
+        menueLinks.forEach(function (a) {
+            if (a.getAttribute("href") === "#" + id) {
+                a.setAttribute("aria-current", "page");
+            } else {
+                a.removeAttribute("aria-current");
+            }
+        });
+        if (!scrollen) return;
+        var element = ziel || document.getElementById(id);
+        var menue = document.getElementById("hauptmenue");
+        // Nur hochscrollen, wenn der Anfang des Bereichs nicht zu sehen ist
+        if (ziel || element.getBoundingClientRect().top < menue.offsetHeight) {
+            element.scrollIntoView({ block: "start" });
+        }
+    }
+
+    function ansichtAusAdresse(scrollen) {
+        var id = decodeURIComponent(window.location.hash.slice(1));
+        var el = id ? document.getElementById(id) : null;
+        var ansicht = el && el.closest ? el.closest(".ansicht") : null;
+        if (!ansicht) {
+            zeigeAnsicht(ANSICHTEN[0].id, null, false);
+            return;
+        }
+        zeigeAnsicht(ansicht.id, el !== ansicht ? el : null, scrollen);
+    }
+
+    window.addEventListener("hashchange", function () { ansichtAusAdresse(true); });
+
     baueTabelle();
     baueSprachauswahl();
     setzeSprache(waehleStartsprache());
+    if (ANSICHTEN.length > 0) {
+        ansichtAusAdresse(true);
+        // Beim Öffnen mit #abschnitt erneut hinscrollen, wenn alles geladen ist
+        if (window.location.hash) {
+            window.addEventListener("load", function () { ansichtAusAdresse(true); });
+        }
+    }
 })();
