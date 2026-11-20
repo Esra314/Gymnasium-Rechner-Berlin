@@ -1,8 +1,8 @@
 :root {
     /* Sanfte, ruhige Farben mit genug Kontrast (WCAG AA) */
-    --blau: #2563a8;
-    --blau-dunkel: #1d4f86;
-    --blau-hell: #eef4fb;
+    --blau: #0369a1;
+    --blau-dunkel: #075985;
+    --blau-hell: #e6f8fe;
     --text: #1f2933;
     --text-leise: #56616e;
     --rand: #d5dbe3;
@@ -1402,20 +1402,22 @@ input[type="checkbox"]:focus-visible {
 /* ---------- Farben: jeder Bereich hat seine eigene Farbe ---------- */
 
 :root {
-    --f1: #2563a8; --f1-dunkel: #1d4f86; --f1-hell: #e7f0fb;   /* Noten berechnen: Blau */
-    --f2: #0f7a63; --f2-dunkel: #0b5e4c; --f2-hell: #e0f5ee;   /* Schulen finden: Grün */
-    --f3: #7a3dc2; --f3-dunkel: #5f2d99; --f3-hell: #f1e8fc;   /* Meine Auswahl: Lila */
-    --f4: #b45309; --f4-dunkel: #8a3f06; --f4-hell: #fff0dc;   /* Tipps & Termine: Orange */
-    --f5: #c0306a; --f5-dunkel: #962352; --f5-hell: #fde7f0;   /* Schul-Infos: Pink */
+    /* Paletten: #00A9FF #89CFF3 #A0E9FF #CDF5FD und #FFE6E6 #E1AFD1 #AD88C6 #7469B6.
+       Für Schrift und Knöpfe dunklere Töne derselben Farben (Kontrast mind. 4,5:1). */
+    --f1: #0369a1; --f1-dunkel: #075985; --f1-hell: #CDF5FD;   /* Noten berechnen: Himmelblau */
+    --f2: #0e7490; --f2-dunkel: #155e75; --f2-hell: #e2f4fd;   /* Schulen finden: Hellblau */
+    --f3: #6a5fae; --f3-dunkel: #574c99; --f3-hell: #ebe8f7;   /* Meine Auswahl: Lila #7469B6 */
+    --f4: #8a5aa8; --f4-dunkel: #714790; --f4-hell: #f3eaf9;   /* Tipps & Termine: Flieder #AD88C6 */
+    --f5: #a8457f; --f5-dunkel: #8a3567; --f5-hell: #FFE6E6;   /* Schul-Infos: Rosa #E1AFD1 */
 }
 
 body {
     background:
-        radial-gradient(circle at 0% 0%, #cfe2fb 0, transparent 45%),
-        radial-gradient(circle at 100% 20%, #f3d9f0 0, transparent 40%),
-        radial-gradient(circle at 20% 100%, #d4f1e6 0, transparent 45%),
-        radial-gradient(circle at 100% 100%, #ffe6c7 0, transparent 40%),
-        #f4f1fb;
+        radial-gradient(circle at 0% 0%, #CDF5FD 0, transparent 45%),
+        radial-gradient(circle at 100% 20%, #f1d7ea 0, transparent 40%),
+        radial-gradient(circle at 20% 100%, #d9f6ff 0, transparent 45%),
+        radial-gradient(circle at 100% 100%, #FFE6E6 0, transparent 40%),
+        #faf7fd;
     background-attachment: fixed;
 }
 
@@ -1944,11 +1946,11 @@ body {
     border-radius: 24px;
     color: #fff;
     background:
-        radial-gradient(circle at 10% 15%, rgba(103, 232, 249, 0.45) 0, transparent 40%),
-        radial-gradient(circle at 90% 10%, rgba(249, 168, 212, 0.45) 0, transparent 40%),
-        radial-gradient(circle at 70% 100%, rgba(196, 181, 253, 0.5) 0, transparent 45%),
-        linear-gradient(135deg, #4f7cf0 0%, #6a6ee8 50%, #8b5cf6 100%);
-    box-shadow: 0 20px 40px -24px rgba(79, 70, 229, 0.8);
+        radial-gradient(circle at 8% 10%, rgba(160, 233, 255, 0.45) 0, transparent 38%),
+        radial-gradient(circle at 92% 8%, rgba(225, 175, 209, 0.55) 0, transparent 40%),
+        radial-gradient(circle at 75% 100%, rgba(255, 230, 230, 0.35) 0, transparent 45%),
+        linear-gradient(135deg, #0077c8 0%, #3f7cc4 35%, #7469B6 70%, #AD88C6 100%);
+    box-shadow: 0 20px 40px -24px rgba(116, 105, 182, 0.9);
     display: grid;
     grid-template-columns: 1.3fr 1fr;
     grid-template-areas: "text beispiel" "karte karte" "unten unten";
@@ -2003,7 +2005,7 @@ body {
 .hero-unter { color: #eef0ff; font-size: 1.05rem; }
 
 .c-ring {
-    fill: #5a63d8;
+    fill: #6a72bf;
     stroke: rgba(255, 255, 255, 0.35);
     stroke-width: 1.5;
     transition: fill 0.2s ease, stroke 0.2s ease;
@@ -2036,7 +2038,7 @@ body {
     padding: 13px 22px;
     border-radius: 12px;
     background: #fff;
-    color: #4338ca;
+    color: #574c99;
     font-weight: 800;
     font-size: 1.02rem;
     text-decoration: none;
@@ -2173,4 +2175,25 @@ html[data-ansicht]:not([data-ansicht="rechner"]) .hero-titel {
     .hero-titel { background: none; color: var(--text); }
     .hero-unter { color: var(--text); }
     .c-raster, .hero-beispiel, .c-karte, .c-unten { display: none; }
+}
+
+/* Paletten auch für Ratgeber-Karten und Hinweise */
+.ratgeber-karte {
+    background: #f4fcff;
+    border: 1px solid #CDF5FD;
+}
+
+.ratgeber-karte + .ratgeber-karte {
+    background: #fff7f7;
+    border-color: #FFE6E6;
+}
+
+.haken-liste li::before {
+    color: var(--v, #0369a1);
+}
+
+:root {
+    --orange: #8a3567;
+    --orange-hell: #FFE6E6;
+    --orange-rand: #E1AFD1;
 }
