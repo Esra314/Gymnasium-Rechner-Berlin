@@ -223,16 +223,31 @@
             <p id="trefferAnzahl" class="treffer-anzahl"></p>
             <p class="klein hinweis-blau" data-i18n="open_day_hint">Tag der offenen Tür und Infoabende: bitte auf der Webseite der Schule prüfen.</p>
 
-            <div class="karte-bereich nur-bildschirm">
-                <div id="karteHinweis">
-                    <button type="button" id="karteLaden" class="zweitrangig" data-i18n="btn_map">Karte anzeigen</button>
+            <div class="liste-karte-schalter nur-bildschirm" role="group" data-i18n-aria="view_switch" aria-label="Ansicht: Liste oder Karte">
+                <button type="button" id="zeigeListe" aria-pressed="true"><span aria-hidden="true">📋</span> <span data-i18n="view_list">Liste</span></button>
+                <button type="button" id="zeigeKarte" aria-pressed="false"><span aria-hidden="true">🗺️</span> <span data-i18n="view_map">Karte</span></button>
+            </div>
+
+            <div id="karteBereich" class="karte-bereich nur-bildschirm verborgen">
+                <div id="karteHinweis" class="karte-einwilligung">
+                    <p class="karte-einwilligung-titel" data-i18n="map_consent_title">Schulen auf der Karte ansehen</p>
+                    <button type="button" id="karteLaden" data-i18n="btn_map">Karte anzeigen</button>
                     <p class="klein" data-i18n="map_notice">Die Karte lädt Kartenbilder von OpenStreetMap. Dabei werden Ihre IP-Adresse und der Kartenausschnitt an OpenStreetMap übertragen.</p>
                 </div>
                 <div id="karte" class="karte verborgen"></div>
+                <p class="karte-legende">
+                    <span class="punkt punkt-gym" aria-hidden="true"></span><span lang="de">Gymnasium</span>
+                    <span class="punkt punkt-iss" aria-hidden="true"></span><span lang="de">Integrierte Sekundarschule (ISS)</span>
+                    <span class="punkt punkt-gms" aria-hidden="true"></span><span lang="de">Gemeinschaftsschule</span>
+                    <span class="punkt punkt-du" aria-hidden="true"></span><span data-i18n="map_you">Mitte Ihres Postleitzahl-Gebiets</span>
+                </p>
             </div>
+
+            <div id="listeBereich">
 
             <ol id="schulListe" class="schul-liste"></ol>
             <button type="button" id="mehrSchulen" class="zweitrangig verborgen" data-i18n="show_more">Weitere Schulen anzeigen</button>
+            </div>
         </div>
 
         <p id="datenquelle" class="klein"></p>

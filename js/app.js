@@ -397,6 +397,7 @@
         r.schulen.slice(0, sichtbareSchulen).forEach(function (s) {
             var li = document.createElement("li");
             li.className = "schule schule-" + s.a;
+            li.id = "schule-" + s.id;
 
             var kopf = document.createElement("div");
             kopf.className = "schule-kopf";
@@ -461,7 +462,7 @@
             liste.appendChild(li);
         });
 
-        if (karte) {
+        if (karte && suchModus === "karte") {
             zeichneKarte(r);
         }
     }
@@ -880,10 +881,18 @@
             inhalt.appendChild(b);
             inhalt.appendChild(document.createElement("br"));
             inhalt.appendChild(document.createTextNode(SCHULART_NAMEN[s.a] + " · " + s.s));
+            inhalt.appendChild(document.createElement("br"));
+            var zurListe = document.createElement("button");
+            zurListe.type = "button";
+            zurListe.className = "karte-details";
+            zurListe.textContent = t("map_details");
+            zurListe.addEventListener("click", function () { zeigeSchuleInListe(s.id); });
+            inhalt.appendChild(zurListe);
             m.bindPopup(inhalt);
             m.addTo(markerSchicht);
             punkte.push([s.lat, s.lon]);
         });
+        karte.invalidateSize();
         if (punkte.length > 1) {
             karte.fitBounds(punkte, { padding: [24, 24], maxZoom: 15 });
         } else {
@@ -897,7 +906,7 @@
         var el = document.getElementById("karte");
         el.classList.remove("verborgen");
         document.getElementById("karteHinweis").classList.add("verborgen");
-        karte = L.map(el, { scrollWheelZoom: false });
+        karte = L.map(el, { scrollWheelZoom: false, zoomSnap: 0.5 });
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
@@ -907,6 +916,43 @@
             zeichneKarte(letzteSuche);
         }
     }
+
+    // Umschalten zwischen Liste und Karte
+    var suchModus = "liste";
+
+    function zeigeModus(modus) {
+        suchModus = modus;
+        document.getElementById("listeBereich").classList.toggle("verborgen", modus !== "liste");
+        document.getElementById("karteBereich").classList.toggle("verborgen", modus !== "karte");
+        document.getElementById("zeigeListe").setAttribute("aria-pressed", modus === "liste" ? "true" : "false");
+        document.getElementById("zeigeKarte").setAttribute("aria-pressed", modus === "karte" ? "true" : "false");
+        if (modus === "karte" && karte) {
+            karte.invalidateSize();
+            if (letzteSuche && letzteSuche.ok) zeichneKarte(letzteSuche);
+        }
+    }
+
+    function zeigeSchuleInListe(id) {
+        if (!letzteSuche || !letzteSuche.ok) return;
+        var index = -1;
+        letzteSuche.schulen.forEach(function (s, i) { if (s.id === id) index = i; });
+        if (index < 0) return;
+        if (index >= sichtbareSchulen) {
+            sichtbareSchulen = Math.ceil((index + 1) / SCHULEN_PRO_SEITE) * SCHULEN_PRO_SEITE;
+        }
+        zeigeModus("liste");
+        zeigeSuche(letzteSuche);
+        var li = document.getElementById("schule-" + id);
+        if (!li) return;
+        var details = li.querySelector("details");
+        if (details) details.open = true;
+        li.classList.add("hervorgehoben");
+        li.scrollIntoView({ block: "start" });
+        window.setTimeout(function () { li.classList.remove("hervorgehoben"); }, 2500);
+    }
+
+    document.getElementById("zeigeListe").addEventListener("click", function () { zeigeModus("liste"); });
+    document.getElementById("zeigeKarte").addEventListener("click", function () { zeigeModus("karte"); });
 
     // ---------- Ereignisse ----------
 
@@ -988,6 +1034,9 @@
                 a.removeAttribute("aria-current");
             }
         });
+        if (id === "schulsuche" && karte && suchModus === "karte") {
+            window.setTimeout(function () { karte.invalidateSize(); }, 0);
+        }
         if (!scrollen) return;
         var element = ziel || document.getElementById(id);
         var menue = document.getElementById("hauptmenue");

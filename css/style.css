@@ -1619,3 +1619,106 @@ body {
     font-size: 1.05rem;
     margin-bottom: 4px;
 }
+
+/* Liste / Karte umschalten */
+.liste-karte-schalter {
+    display: inline-flex;
+    margin: 4px 0 14px;
+    padding: 4px;
+    gap: 4px;
+    border-radius: 12px;
+    background: var(--blau-hell);
+    border: 1px solid var(--rand);
+}
+
+.liste-karte-schalter button {
+    min-height: 44px;
+    min-width: 120px;
+    padding: 6px 18px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--blau-dunkel);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.liste-karte-schalter button[aria-pressed="true"] {
+    background: var(--blau);
+    color: #fff;
+    box-shadow: 0 4px 10px -6px var(--blau);
+}
+
+.karte-einwilligung {
+    padding: 18px;
+    border-radius: 12px;
+    border: 2px dashed var(--blau);
+    background: #fff;
+    text-align: center;
+}
+
+.karte-einwilligung-titel {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+}
+
+.karte-einwilligung .klein {
+    margin-top: 10px;
+}
+
+.karte-legende {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+}
+
+.punkt {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #aaa;
+    margin-inline-start: 6px;
+}
+
+.punkt-gym { background: #1565c0; }
+.punkt-iss { background: #1b7f3b; }
+.punkt-gms { background: #8e24aa; }
+.punkt-du { background: #333; width: 10px; height: 10px; }
+
+.karte-details {
+    margin-top: 6px;
+    padding: 4px 10px;
+    min-height: 32px;
+    border-radius: 8px;
+    border: 1px solid #0f7a63;
+    background: #e0f5ee;
+    color: #0b5e4c;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.schule.hervorgehoben {
+    outline: 3px solid var(--blau);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .liste-karte-schalter {
+        display: flex;
+    }
+
+    .liste-karte-schalter button {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .karte {
+        height: 62vh;
+    }
+}
