@@ -46,3 +46,15 @@ test("Link-Vorschau-Bild und Sitemap existieren", () => {
     assert.ok(fs.existsSync(path.join(wurzel, "icons/og-bild.png")));
     assert.match(fs.readFileSync(path.join(wurzel, "sitemap.xml"), "utf8"), /<loc>https:\/\//);
 });
+
+test("Datenschutz nennt GitHub Pages und hat eine Kurzfassung in allen Sprachen", () => {
+    const ds = fs.readFileSync(path.join(wurzel, "datenschutz.html"), "utf8");
+    assert.match(ds, /GitHub Pages/);
+    assert.match(ds, /Data Privacy Framework/);
+    for (const code of ["en", "tr", "ar", "uk", "ru"]) {
+        const m = ds.match(new RegExp('<section id="' + code + '" lang="' + code + '"[\\s\\S]*?</section>'));
+        assert.ok(m, "Kurzfassung fehlt: " + code);
+        assert.match(m[0], /GitHub/, code);
+        assert.match(m[0], /Data Privacy Framework/, code);
+    }
+});

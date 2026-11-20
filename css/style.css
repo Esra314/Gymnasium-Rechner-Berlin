@@ -1606,3 +1606,16 @@ body {
         max-width: 980px;
     }
 }
+
+.sprach-zusammenfassung {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--blau-hell);
+    scroll-margin-top: 12px;
+}
+
+.sprach-zusammenfassung h3 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
