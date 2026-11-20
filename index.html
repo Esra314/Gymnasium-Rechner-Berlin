@@ -46,10 +46,89 @@
         <ul class="sprach-chips" id="sprachChips"></ul>
     </nav>
 
-    <header class="kopf">
-        <h1 lang="de">Oberschul-Helfer Berlin</h1>
-        <p class="tagline" lang="de">Von der Grundschule zur Oberschule</p>
-        <p class="untertitel" data-i18n="subtitle">Welche weiterführende Schule ist nach Klasse 6 möglich? Berechnen Sie es mit den Noten aus dem Zeugnis.</p>
+    <header class="hero">
+        <div class="c-raster" aria-hidden="true"></div>
+        <div class="hero-text">
+            <h1 class="hero-marke" lang="de">Oberschul-Helfer Berlin</h1>
+            <p class="hero-titel" data-i18n="hero_title">Deine Reise zur Oberschule</p>
+            <p class="hero-unter" data-i18n="hero_sub">Vier Stationen – und du weißt, welche Schulen zu dir passen.</p>
+        </div>
+        <div class="hero-beispiel" aria-hidden="true">
+            <div class="b-ergebnis">
+                <svg viewBox="0 0 120 120" class="b-ring">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#e7edf6" stroke-width="12"/>
+                    <circle class="b-ring-wert" cx="60" cy="60" r="50" fill="none" stroke="#2e7d4f" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="80" transform="rotate(-90 60 60)"/>
+                    <text x="60" y="58" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2933">2,1</text>
+                    <text x="60" y="78" text-anchor="middle" font-size="11" fill="#56616e" data-i18n="hero_avg">Durchschnitt</text>
+                </svg>
+                <div>
+                    <p class="b-badge" data-i18n="hero_possible">Gymnasium möglich</p>
+                    <p class="b-klein" data-i18n="hero_example">Beispiel-Ergebnis</p>
+                </div>
+            </div>
+            <ul class="b-schulen" lang="de" dir="ltr">
+                <li><span class="b-punkt gym"></span>Gymnasium <small>1,2 km</small></li>
+                <li><span class="b-punkt iss"></span>Integrierte Sekundarschule <small>0,8 km</small></li>
+                <li><span class="b-punkt gms"></span>Gemeinschaftsschule <small>2,0 km</small></li>
+            </ul>
+        </div>
+        <svg class="c-karte" viewBox="0 28 640 202" role="img" data-i18n-aria="hero_map" aria-label="Vier Stationen: Noten, Schulen, Auswahl, Anmeldung">
+            <defs>
+                <linearGradient id="cLinie" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#22d3ee"/>
+                    <stop offset="0.5" stop-color="#a78bfa"/>
+                    <stop offset="1" stop-color="#f472b6"/>
+                </linearGradient>
+                <radialGradient id="cGlow">
+                    <stop offset="0" stop-color="#fff"/>
+                    <stop offset="0.4" stop-color="#67e8f9"/>
+                    <stop offset="1" stop-color="#67e8f9" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+            <path id="cWeg" d="M60 150 C140 110 180 175 245 150 S360 50 420 62 S540 140 590 120" fill="none" stroke="url(#cLinie)" stroke-width="3" stroke-linecap="round"/>
+            <a href="#rechner" class="c-station">
+                <circle class="c-ring" cx="60" cy="150" r="27"/>
+                <g class="c-icon" transform="translate(48 138)">
+                    <rect x="0" y="0" width="24" height="24" rx="4"/><path d="M6 6h12M6 12h3M11 12h2M15 12h3M6 18h3M11 18h2M15 18h3"/>
+                </g>
+                <text x="60" y="204" text-anchor="middle" class="c-nr">01</text>
+                <text x="60" y="222" text-anchor="middle" class="c-label" data-i18n="hero_s1">Noten</text>
+            </a>
+            <a href="#schulsuche" class="c-station">
+                <circle class="c-ring" cx="245" cy="150" r="27"/>
+                <g class="c-icon" transform="translate(233 138)">
+                    <path d="M12 23s8-7.5 8-13.5A8 8 0 0 0 4 9.5C4 15.5 12 23 12 23z"/><circle cx="12" cy="9.5" r="3"/>
+                </g>
+                <text x="245" y="204" text-anchor="middle" class="c-nr">02</text>
+                <text x="245" y="222" text-anchor="middle" class="c-label" data-i18n="hero_s2">Schulen</text>
+            </a>
+            <a href="#vergleich" class="c-station">
+                <circle class="c-ring" cx="420" cy="62" r="27"/>
+                <g class="c-icon" transform="translate(408 50)">
+                    <path d="M5 2h14v21l-7-5-7 5z"/>
+                </g>
+                <text x="420" y="116" text-anchor="middle" class="c-nr">03</text>
+                <text x="420" y="134" text-anchor="middle" class="c-label" data-i18n="hero_s3">Auswahl</text>
+            </a>
+            <a href="#ratgeber" class="c-station">
+                <circle class="c-ring" cx="590" cy="120" r="27"/>
+                <g class="c-icon" transform="translate(578 108)">
+                    <rect x="1" y="4" width="22" height="19" rx="3"/><path d="M1 10h22M7 1v6M17 1v6M8 16l3 3 5-6"/>
+                </g>
+                <text x="590" y="174" text-anchor="middle" class="c-nr">04</text>
+                <text x="590" y="192" text-anchor="middle" class="c-label" data-i18n="hero_s4">Anmeldung</text>
+            </a>
+            <circle r="9" fill="url(#cGlow)" class="c-punkt" aria-hidden="true">
+                <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#cWeg"/></animateMotion>
+            </circle>
+        </svg>
+        <div class="c-unten">
+            <a class="c-start" href="#rechnerForm"><span data-i18n="hero_cta">Los geht's: Noten eintragen</span> <span aria-hidden="true">→</span></a>
+            <p class="c-tipp">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+                <span><strong data-i18n="hero_tip_who">Tipp:</strong> <span data-i18n="hero_tip">Leg dein Zeugnis aus Klasse 5 und 6 bereit!</span></span>
+            </p>
+        </div>
     </header>
 
     <nav class="hauptmenue nur-bildschirm" id="hauptmenue" data-i18n-aria="nav_label" aria-label="Inhalt">

@@ -1063,6 +1063,7 @@
 
     function zeigeAnsicht(id, ziel, scrollen) {
         document.documentElement.classList.add("mit-ansichten");
+        document.documentElement.setAttribute("data-ansicht", id);
         ANSICHTEN.forEach(function (el) { el.classList.toggle("aktiv", el.id === id); });
         menueLinks.forEach(function (a) {
             if (a.getAttribute("href") === "#" + id) {
