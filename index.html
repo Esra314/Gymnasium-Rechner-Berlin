@@ -57,6 +57,7 @@
         <a href="#schulsuche"><span class="tab-nr" aria-hidden="true">2</span><span class="tab-text" data-i18n="tab_find">Schulen finden</span></a>
         <a href="#vergleich"><span class="tab-nr" aria-hidden="true">3</span><span class="tab-text" data-i18n="tab_mine">Meine Auswahl</span><span class="zaehler verborgen" id="merkZaehler"></span></a>
         <a href="#ratgeber"><span class="tab-nr" aria-hidden="true">4</span><span class="tab-text" data-i18n="tab_guide">Tipps &amp; Termine</span></a>
+        <a href="#fragen"><span class="tab-nr" aria-hidden="true">5</span><span class="tab-text" data-i18n="tab_info">Schul-Infos</span></a>
     </nav>
 
     <noscript>
@@ -289,10 +290,17 @@
         </div>
         <ul id="terminListe" class="termin-liste"></ul>
         <p class="klein" data-i18n="dates_note">Bitte prüfen Sie die Termine auf der offiziellen Seite. Sie können sich ändern.</p>
+        <a class="weiter nur-bildschirm" href="#fragen" data-i18n="next_info">Weiter: Infos zu den Schularten</a>
     </section>
+    </div>
 
-    <section id="fragen" class="abschnitt faq nur-bildschirm">
-        <h2 data-i18n="faq_title">Häufige Fragen</h2>
+    <section id="fragen" class="abschnitt faq ansicht nur-bildschirm">
+        <h2 data-i18n="faq_title">Gut zu wissen: Oberschulen in Berlin</h2>
+        <p class="hinweis" data-i18n="info_intro">Was ist was? Hier finden Sie kurz erklärt die Schularten, Abschlüsse und Begriffe, die Ihnen bei der Schulwahl begegnen.</p>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q7">Was ist ein Gymnasium?</summary>
+                <p data-i18n="faq_a7">Das Gymnasium führt in 6 Jahren (Klasse 7 bis 12) zum Abitur. Das Lerntempo ist höher, und ab Klasse 7 lernen alle Kinder eine zweite Fremdsprache. Das erste Jahr am Gymnasium ist ein Probejahr: Wer es nicht schafft, wechselt an eine ISS oder Gemeinschaftsschule.</p>
+            </details>
             <details class="faq-eintrag">
                 <summary data-i18n="faq_q1">Was ist eine Integrierte Sekundarschule (ISS)?</summary>
                 <p data-i18n="faq_a1">Die ISS führt zu allen Schulabschlüssen: Berufsbildungsreife, Mittlerer Schulabschluss und Abitur. Das Abitur macht man nach Klasse 13, also mit einem Jahr mehr Zeit als am Gymnasium. Viele ISS haben eine eigene gymnasiale Oberstufe oder arbeiten mit einer zusammen.</p>
@@ -314,11 +322,18 @@
                 <p data-i18n="faq_a5">Ja. Beide Schularten führen zum Abitur. Es dauert dort ein Jahr länger (nach Klasse 13), dafür gibt es mehr Zeit zum Lernen.</p>
             </details>
             <details class="faq-eintrag">
+                <summary data-i18n="faq_q8">Was bedeutet Ganztag?</summary>
+                <p data-i18n="faq_a8">Gebundener Ganztag: Unterricht und Angebote gehen an mehreren Tagen bis in den Nachmittag, für alle Kinder verbindlich. Teilgebundener Ganztag: nur an einigen Tagen verbindlich. Offener Ganztag: Nachmittagsangebote sind freiwillig. Bei „Details“ in der Schulliste steht, was die Schule anbietet.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q9">Was bedeuten Profil, bilingual und Europa-Schule?</summary>
+                <p data-i18n="faq_a9">Ein Profil ist ein Schwerpunkt der Schule, zum Beispiel Musik, Sport, MINT (Mathematik, Naturwissenschaften) oder Sprachen. Bilingual heißt: Einige Fächer werden in einer Fremdsprache unterrichtet. An einer Staatlichen Europa-Schule Berlin lernen Kinder in zwei Sprachen, zum Beispiel Deutsch und Spanisch.</p>
+            </details>
+            <details class="faq-eintrag">
                 <summary data-i18n="faq_q6">Im Zeugnis fehlt eine Note oder steht etwas anderes?</summary>
                 <p data-i18n="faq_a6">Zum Beispiel eine Zwischennote wie „2-3“, ein anderes Fach oder ein Zeugnis aus einem anderen Bundesland oder Land. Dann gelten Sonderregeln. Die Grundschule berät Sie und berechnet die Förderprognose. Diese Seite kann solche Fälle nicht genau berechnen.</p>
             </details>
     </section>
-    </div>
 
     <aside class="fuss-hinweise">
         <p data-i18n="disclaimer">Unverbindliche Berechnung, ohne Gewähr. Verbindlich ist nur die Förderprognose der Grundschule. Stand der Regeln: November 2026.</p>

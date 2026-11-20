@@ -29,10 +29,10 @@ test("Keine Inline-Skripte und keine fremden Skripte in index.html", () => {
     }
 });
 
-test("Menü-Links zeigen auf die vier Bereiche", () => {
+test("Menü-Links zeigen auf die fünf Bereiche", () => {
     const ziele = [...html.matchAll(/class="hauptmenue[\s\S]*?<\/nav>/g)][0][0]
         .match(/href="#([\w-]+)"/g).map((h) => h.slice(7, -1));
-    assert.deepEqual(ziele, ["rechner", "schulsuche", "vergleich", "ratgeber"]);
+    assert.deepEqual(ziele, ["rechner", "schulsuche", "vergleich", "ratgeber", "fragen"]);
     for (const id of ziele) {
         assert.match(html, new RegExp('id="' + id + '" class="[^"]*\\bansicht\\b'), id);
     }

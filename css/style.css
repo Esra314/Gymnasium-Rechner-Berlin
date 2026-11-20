@@ -1398,3 +1398,211 @@ input[type="checkbox"]:focus-visible {
         display: none !important;
     }
 }
+
+/* ---------- Farben: jeder Bereich hat seine eigene Farbe ---------- */
+
+:root {
+    --f1: #2563a8; --f1-dunkel: #1d4f86; --f1-hell: #e7f0fb;   /* Noten berechnen: Blau */
+    --f2: #0f7a63; --f2-dunkel: #0b5e4c; --f2-hell: #e0f5ee;   /* Schulen finden: Grün */
+    --f3: #7a3dc2; --f3-dunkel: #5f2d99; --f3-hell: #f1e8fc;   /* Meine Auswahl: Lila */
+    --f4: #b45309; --f4-dunkel: #8a3f06; --f4-hell: #fff0dc;   /* Tipps & Termine: Orange */
+    --f5: #c0306a; --f5-dunkel: #962352; --f5-hell: #fde7f0;   /* Schul-Infos: Pink */
+}
+
+body {
+    background:
+        radial-gradient(circle at 0% 0%, #cfe2fb 0, transparent 45%),
+        radial-gradient(circle at 100% 20%, #f3d9f0 0, transparent 40%),
+        radial-gradient(circle at 20% 100%, #d4f1e6 0, transparent 45%),
+        radial-gradient(circle at 100% 100%, #ffe6c7 0, transparent 40%),
+        #f4f1fb;
+    background-attachment: fixed;
+}
+
+.kopf {
+    margin: 0 0 20px;
+    padding: 22px 24px;
+    border-radius: 16px;
+    background: linear-gradient(120deg, var(--f1) 0%, var(--f3) 55%, var(--f5) 100%);
+    color: #fff;
+    box-shadow: 0 10px 24px -14px rgba(90, 40, 150, 0.8);
+}
+
+.kopf h1,
+.kopf .tagline,
+.kopf .untertitel {
+    color: #fff;
+}
+
+.kopf .untertitel {
+    opacity: 0.95;
+}
+
+/* Menü: jede Registerkarte in ihrer Farbe */
+.hauptmenue {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.hauptmenue a:nth-child(1) { --tab: var(--f1); --tab-hell: var(--f1-hell); }
+.hauptmenue a:nth-child(2) { --tab: var(--f2); --tab-hell: var(--f2-hell); }
+.hauptmenue a:nth-child(3) { --tab: var(--f3); --tab-hell: var(--f3-hell); }
+.hauptmenue a:nth-child(4) { --tab: var(--f4); --tab-hell: var(--f4-hell); }
+.hauptmenue a:nth-child(5) { --tab: var(--f5); --tab-hell: var(--f5-hell); }
+
+.hauptmenue a {
+    background: var(--tab-hell);
+    color: var(--tab);
+    border: 2px solid transparent;
+    font-size: 0.9rem;
+}
+
+.hauptmenue a:hover {
+    border-color: var(--tab);
+}
+
+.hauptmenue a .tab-nr {
+    background: #fff;
+    color: var(--tab);
+    border-color: var(--tab);
+}
+
+.hauptmenue a[aria-current="page"] {
+    background: var(--tab);
+    color: #fff;
+    box-shadow: 0 6px 14px -8px var(--tab);
+}
+
+.hauptmenue a[aria-current="page"] .tab-nr {
+    background: #fff;
+    color: var(--tab);
+    border-color: #fff;
+}
+
+/* Bereiche: farbiger Rahmen oben, zarte Farbfläche, Knöpfe in der Bereichsfarbe */
+#rechner    { --v: var(--f1); --v-dunkel: var(--f1-dunkel); --v-hell: var(--f1-hell); }
+#schulsuche { --v: var(--f2); --v-dunkel: var(--f2-dunkel); --v-hell: var(--f2-hell); }
+#vergleich  { --v: var(--f3); --v-dunkel: var(--f3-dunkel); --v-hell: var(--f3-hell); }
+#ratgeber   { --v: var(--f4); --v-dunkel: var(--f4-dunkel); --v-hell: var(--f4-hell); }
+#fragen     { --v: var(--f5); --v-dunkel: var(--f5-dunkel); --v-hell: var(--f5-hell); }
+
+.mit-ansichten .ansicht.aktiv {
+    --blau: var(--v);
+    --blau-dunkel: var(--v-dunkel);
+    --blau-hell: var(--v-hell);
+    padding: 22px 20px;
+    border-radius: 16px;
+    border-top: 6px solid var(--v);
+    background: linear-gradient(180deg, var(--v-hell) 0, #fff 260px);
+}
+
+.mit-ansichten .ansicht.aktiv.abschnitt {
+    border-top: 6px solid var(--v);
+    padding-top: 22px;
+}
+
+.mit-ansichten .ansicht.aktiv > h2,
+.mit-ansichten .ansicht.aktiv h2 {
+    color: var(--v-dunkel);
+}
+
+.mit-ansichten #ratgeber .abschnitt {
+    border-top-color: var(--f4-hell);
+}
+
+.mit-ansichten .ansicht.aktiv .hinweis {
+    background: #fff;
+    border: 1px solid var(--v-hell);
+    border-inline-start: 5px solid var(--v);
+}
+
+.mit-ansichten .ansicht.aktiv .faq-eintrag summary {
+    color: var(--v-dunkel);
+}
+
+/* Weiter-Knopf in der Farbe des nächsten Schritts */
+.weiter[href="#schulsuche"] { --n: var(--f2); --n-hell: var(--f2-hell); }
+.weiter[href="#vergleich"]  { --n: var(--f3); --n-hell: var(--f3-hell); }
+.weiter[href="#ratgeber"]   { --n: var(--f4); --n-hell: var(--f4-hell); }
+.weiter[href="#fragen"]     { --n: var(--f5); --n-hell: var(--f5-hell); }
+
+.weiter {
+    background: var(--n);
+    border-color: var(--n);
+    color: #fff;
+}
+
+.weiter:hover {
+    filter: brightness(1.08);
+    border-color: var(--n);
+}
+
+@media (max-width: 600px) {
+    .kopf {
+        padding: 18px 16px;
+    }
+
+    .hauptmenue {
+        gap: 2px;
+    }
+
+    .hauptmenue a {
+        background: transparent;
+        font-size: 0.66rem;
+        border-width: 0 0 3px;
+        border-radius: 8px;
+        padding: 4px 1px;
+    }
+
+    .hauptmenue a[aria-current="page"] {
+        background: var(--tab-hell);
+        color: var(--tab);
+        border-color: var(--tab);
+        box-shadow: none;
+    }
+
+    .hauptmenue a[aria-current="page"] .tab-nr {
+        background: var(--tab);
+        color: #fff;
+        border-color: var(--tab);
+    }
+
+    .mit-ansichten .ansicht.aktiv {
+        margin: 0 -8px;
+        padding: 18px 12px;
+    }
+}
+
+@media print {
+    body {
+        background: #fff;
+    }
+
+    .kopf {
+        background: none;
+        color: var(--text);
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .kopf h1 {
+        color: #2563a8;
+    }
+
+    .kopf .tagline,
+    .kopf .untertitel {
+        color: var(--text);
+    }
+
+    .mit-ansichten .ansicht.aktiv {
+        background: none;
+        border-top: none;
+        padding: 0;
+    }
+}
+
+@media (min-width: 1000px) {
+    .container,
+    .seitenfuss {
+        max-width: 980px;
+    }
+}
