@@ -483,6 +483,7 @@
     // Angaben aus dem Schulverzeichnis und Termine aus dem Kalender (data/schulinfos.js)
     var schulinfos = (window.SCHULINFOS && window.SCHULINFOS.schulen) || {};
     var infoStand = (window.SCHULINFOS && window.SCHULINFOS.stand) || "";
+    var webStand = (window.SCHULINFOS && window.SCHULINFOS.webStand) || infoStand;
     var PORTRAET_URL = "https://www.bildung.berlin.de/Schulverzeichnis/Schulportrait.aspx?IDSchulzweig=";
     var KALENDER_URL = "https://www.berlin.de/land/kalender/index.php?c=79&kategorie%5B47%5D=109&stichwort=";
 
@@ -647,8 +648,32 @@
         return box;
     }
 
+    // Kleiner Quellenhinweis für Angaben von der Website der Schule
+    function webQuelle(url) {
+        var a = neuerLink(url, "🌐 " + t("src_web", { datum: webStand ? datum(webStand) : "–" }));
+        var p = element("p", "web-quelle");
+        p.appendChild(a);
+        return p;
+    }
+
+    // Text mit Link zur Website der Schule (wenn nichts gefunden wurde)
+    function mitWebsite(text, s) {
+        var p = element("p", "leise", text + " ");
+        if (s.w) p.appendChild(neuerLink(webseite(s), "🌐 " + t("website")));
+        return p;
+    }
+
+    function inhaltMitQuelle(inhalt, url) {
+        if (!url) return inhalt;
+        var box = element("div");
+        box.appendChild(inhalt);
+        box.appendChild(webQuelle(url));
+        return box;
+    }
+
     function baueDetails(s) {
         var info = schulinfos[s.id] || {};
+        var quelle = info.w || {};
         var details = element("details", "schul-details");
         details.appendChild(element("summary", "", t("details_school")));
         var termine = kommendeTermine(s);
@@ -678,13 +703,16 @@
         details.appendChild(anfahrt);
 
         // 2. Fremdsprachen und Profil als Etiketten
-        if (sprachen.chips.length) details.appendChild(abschnitt("🗣️", "f_lang", chipReihe(sprachen.chips)));
+        if (sprachen.chips.length) details.appendChild(abschnitt("🗣️", "f_lang", inhaltMitQuelle(chipReihe(sprachen.chips), quelle.sp)));
         if (info.pr) {
             var profilChips = info.pr.split(/,\s*/).map(function (x) { var c = chip(x, "chip-profil"); c.lang = "de"; c.dir = "ltr"; return c; });
             details.appendChild(abschnitt("🎭", "f_profil", chipReihe(profilChips, 4)));
         }
         if (info.gt) {
-            details.appendChild(abschnitt("⏰", "f_ganztag", element("p", "", t("gt_" + info.gt))));
+            details.appendChild(abschnitt("⏰", "f_ganztag", inhaltMitQuelle(element("p", "", t("gt_" + info.gt)), quelle.gt)));
+        }
+        if (info.me && quelle.me) {
+            details.appendChild(abschnitt("🍽️", "chip_lunch", webQuelle(quelle.me)));
         }
 
         // 3. Termine
@@ -694,6 +722,7 @@
             termine.forEach(function (x, i) {
                 var li = element("li", i >= 2 ? "verborgen" : "");
                 li.appendChild(neuerLink(x.l, terminText(x)));
+                if (x.q === "w") li.appendChild(element("small", "termin-quelle", " · " + t("src_web_short")));
                 terminBox.appendChild(li);
             });
             if (termine.length > 2) {
@@ -709,7 +738,7 @@
                 terminBox = terminHuelle;
             }
         } else {
-            terminBox = element("p", "leise", t("dates_none_short"));
+            terminBox = mitWebsite(t("dates_none_short"), s);
         }
         details.appendChild(abschnitt("📅", "f_tdot", terminBox));
 
@@ -720,8 +749,14 @@
                 .map(function (x) { var c = chip(x, "chip-ag"); c.lang = "de"; c.dir = "ltr"; return c; });
             details.appendChild(abschnitt("⚽", "sv_ags", chipReihe(agChips, 6)));
         }
-        if (!info.sp && !info.gt && !info.pr && !info.me) {
-            details.appendChild(element("p", "leise", t("sv_none")));
+        var fehlt = [];
+        if (!info.sp) fehlt.push(t("f_lang"));
+        if (!info.gt) fehlt.push(t("f_ganztag"));
+        if (!info.me) fehlt.push(t("chip_lunch"));
+        if (fehlt.length === 3 && !info.pr) {
+            details.appendChild(mitWebsite(t("sv_none"), s));
+        } else if (fehlt.length) {
+            details.appendChild(mitWebsite(t("missing_check", { liste: fehlt.join(", ") }), s));
         }
 
         // 5. Links

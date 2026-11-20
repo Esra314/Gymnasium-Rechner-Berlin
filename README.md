@@ -99,13 +99,23 @@ Am besten einmal pro Schuljahr ausführen.
 Fremdsprachen, Ganztag, Profil, AGs und Mittagessen kommen aus den Schulporträts des
 [Berliner Schulverzeichnisses](https://www.bildung.berlin.de/Schulverzeichnis/), Tage der offenen Tür und
 Infoabende aus dem [Kalender der Senatsverwaltung](https://www.berlin.de/land/kalender/index.php?c=79).
-Die App zeigt sie mit Stand und dem Hinweis „bitte prüfen“ an und füllt damit die Checkliste vor.
+Weil der Kalender nur wenige Schulen enthält, werden zusätzlich die Websites der Schulen
+durchsucht (Startseite und passende Unterseiten wie „Tag der offenen Tür“, „Anmeldung“, „Termine“).
+Von dort kommen weitere Termine und – nur wo das Schulverzeichnis nichts sagt – Ganztag,
+Mittagessen und Fremdsprachen. Jede dieser Angaben trägt die Adresse der Seite, auf der sie
+gefunden wurde, und das Abrufdatum. Was nicht gefunden wird, zeigt die App mit einem Link zur
+Website der Schule an.
 
 ```bash
 python3 scripts/schulverzeichnis_laden.py roh/      # schreibt roh/portraets.json (ca. 10 Min.)
 python3 scripts/kalender_laden.py roh/termine.json  # Termine ab heute
-npm run schulinfos -- roh/portraets.json roh/termine.json
+python3 -I scripts/schulwebsites_laden.py data/schulen.js roh/web/          # ca. 30 Min.
+python3 -I scripts/schulwebsites_auswerten.py roh/web/ roh/portraets.json roh/web.json
+npm run schulinfos -- roh/portraets.json roh/termine.json "" roh/web.json
 ```
+
+Die Website-Termine sind automatisch erkannt. Nach jedem Lauf die Liste kurz durchsehen
+(`roh/web.json` enthält zu jedem Termin den Textausschnitt `ctx`) und falsche Treffer löschen.
 
 Vor jeder Anmelderunde (Herbst) neu laden: Die Schulen tragen ihre Termine laufend nach.
 

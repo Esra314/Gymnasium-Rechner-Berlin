@@ -1919,3 +1919,18 @@ body {
 .sv-termine {
     font-size: 0.9rem;
 }
+
+/* Angaben von der Website der Schule */
+.web-quelle {
+    margin: 4px 0 0;
+    font-size: 0.78rem;
+}
+
+.web-quelle a,
+.termin-quelle {
+    color: var(--text-leise);
+}
+
+.termin-quelle {
+    font-size: 0.78rem;
+}

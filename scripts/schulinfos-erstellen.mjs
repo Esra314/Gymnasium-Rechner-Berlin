@@ -3,12 +3,17 @@
 //
 //   python3 scripts/schulverzeichnis_laden.py roh/    -> roh/portraets.json
 //   python3 scripts/kalender_laden.py roh/termine.json
-//   node scripts/schulinfos-erstellen.mjs roh/portraets.json roh/termine.json [Stand JJJJ-MM-TT]
+//   python3 scripts/schulwebsites_laden.py data/schulen.js roh/web/     (optional)
+//   python3 scripts/schulwebsites_auswerten.py roh/web/ roh/portraets.json roh/web.json
+//   node scripts/schulinfos-erstellen.mjs roh/portraets.json roh/termine.json [Stand JJJJ-MM-TT] [roh/web.json]
+//
+// Angaben von den Websites der Schulen werden mit q:"w" (Termine) bzw. im Feld w
+// (Quell-URL je Feld) markiert und nur dort ergänzt, wo das Schulverzeichnis nichts sagt.
 //
 // Nur Schulen, die auch in data/schulen.js stehen, werden übernommen.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const [portraetDatei, termineDatei, standArg] = process.argv.slice(2);
+const [portraetDatei, termineDatei, standArg, webDatei] = process.argv.slice(2);
 if (!portraetDatei || !termineDatei) {
     console.error("Aufruf: node scripts/schulinfos-erstellen.mjs portraets.json termine.json [stand]");
     process.exit(1);
@@ -16,6 +21,7 @@ if (!portraetDatei || !termineDatei) {
 const stand = standArg || new Date().toISOString().slice(0, 10);
 const portraets = JSON.parse(readFileSync(portraetDatei, "utf8"));
 const termine = JSON.parse(readFileSync(termineDatei, "utf8"));
+const web = webDatei ? JSON.parse(readFileSync(webDatei, "utf8")) : {};
 
 const schulenJs = readFileSync(new URL("../data/schulen.js", import.meta.url), "utf8");
 const bekannt = new Set([...schulenJs.matchAll(/"id":"(\w+)"/g)].map((m) => m[1]));
@@ -97,6 +103,30 @@ for (const t of termine) {
         gesehen.add(bsn);
     }
 }
+// Angaben von den Websites der Schulen
+let webStand = "";
+let webTermine = 0;
+for (const [bsn, w] of Object.entries(web)) {
+    const s = schulen[bsn];
+    if (!s) continue;
+    if (w.abruf && w.abruf > webStand) webStand = w.abruf;
+    for (const x of w.td || []) {
+        if (!/^https:\/\//.test(x.l)) continue;
+        // gleicher Tag schon aus dem amtlichen Kalender: der hat Vorrang
+        if (s.td.some((y) => y.d === x.d)) continue;
+        const termin = { d: x.d, a: x.a, l: x.l, q: "w" };
+        if (x.v) termin.v = x.v;
+        if (x.v && x.b) termin.b = x.b;
+        s.td.push(termin);
+        webTermine++;
+    }
+    const quellen = {};
+    if (w.gt && !s.gt && /^https:\/\//.test(w.gt.l)) { s.gt = w.gt.wert; quellen.gt = w.gt.l; }
+    if (w.me && !s.me && /^https:\/\//.test(w.me.l)) { s.me = "Mittagessen (laut Website der Schule)"; quellen.me = w.me.l; }
+    if (w.sp && !s.sp && /^https:\/\//.test(w.sp.l)) { s.sp = w.sp.wert.join(", "); quellen.sp = w.sp.l; }
+    if (Object.keys(quellen).length) s.w = quellen;
+}
+
 for (const s of Object.values(schulen)) {
     s.td.sort((a, b) => (a.d + (a.v || "")).localeCompare(b.d + (b.v || "")));
     s.td.forEach((x) => delete x.k);
@@ -104,11 +134,14 @@ for (const s of Object.values(schulen)) {
 }
 
 const daten = { stand, schulen };
+if (webStand) daten.webStand = webStand;
 const kopf = `// Automatisch erzeugt mit scripts/schulinfos-erstellen.mjs – nicht von Hand ändern.
 // Quellen: Berliner Schulverzeichnis (bildung.berlin.de/Schulverzeichnis) und
-// Veranstaltungskalender der Senatsverwaltung für Bildung, Jugend und Familie (berlin.de).
+// Veranstaltungskalender der Senatsverwaltung für Bildung, Jugend und Familie (berlin.de)
+// sowie die Websites der Schulen (Termine und fehlende Angaben, mit Quell-URL).
 // Angaben ohne Gewähr; die Schulen können sie jederzeit ändern.
 `;
 writeFileSync(new URL("../data/schulinfos.js", import.meta.url),
     kopf + "window.SCHULINFOS = " + JSON.stringify(daten) + ";\n");
-console.log(`Schulen: ${Object.keys(schulen).length}, mit Terminen: ${gesehen.size}, Stand ${stand}`);
+console.log(`Schulen: ${Object.keys(schulen).length}, mit Kalender-Terminen: ${gesehen.size}, ` +
+    `Website-Termine: ${webTermine}, Stand ${stand}${webStand ? ", Websites " + webStand : ""}`);
