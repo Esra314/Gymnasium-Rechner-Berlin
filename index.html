@@ -1,85 +1,464 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gymnasium Rechner Berlin</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Oberschul-Helfer Berlin – Von der Grundschule zur Oberschule | Notenrechner Klasse 5/6</title>
+    <meta name="description" content="Oberschul-Helfer Berlin: Von der Grundschule zur Oberschule. Kostenloser Notenrechner – Durchschnitt aus Klasse 5 und 6 berechnen, Notensumme und Gymnasialeignung (Förderprognose) prüfen und passende Oberschulen in der Nähe finden: Gymnasium, Integrierte Sekundarschule (ISS) und Gemeinschaftsschule. Mehrsprachig: Deutsch, Englisch, Türkisch, Arabisch, Ukrainisch und Russisch.">
+    <meta name="keywords" content="Oberschul-Helfer Berlin, Oberschule Berlin, Grundschule Oberschule Übergang, Gymnasium Rechner Berlin, Notenrechner, Durchschnitt berechnen Klasse 5 6, Durchschnittsberechnung, Gymnasialeignung, Förderprognose, Notensumme, Schulwahl Berlin, Klasse 7, ISS, Integrierte Sekundarschule, Gemeinschaftsschule, Probeunterricht, mehrsprachig, Türkisch, Arabisch, Ukrainisch, Russisch, Englisch">
+    <meta name="theme-color" content="#7469B6">
+    <meta name="format-detection" content="telephone=no">
+    <meta property="og:title" content="Oberschul-Helfer Berlin – Von der Grundschule zur Oberschule">
+    <meta property="og:description" content="Welche Oberschule ist nach Klasse 6 möglich? Durchschnitt aus Klasse 5 und 6 berechnen und Schulen in der Nähe finden.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <meta property="og:image" content="https://esra314.github.io/Oberschul-Helfer-Berlin/icons/og-bild.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="de_DE">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <link rel="alternate" hreflang="de" href="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <link rel="alternate" hreflang="en" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=en">
+    <link rel="alternate" hreflang="tr" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=tr">
+    <link rel="alternate" hreflang="ar" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=ar">
+    <link rel="alternate" hreflang="uk" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=uk">
+    <link rel="alternate" hreflang="ru" href="https://esra314.github.io/Oberschul-Helfer-Berlin/?lang=ru">
+    <link rel="alternate" hreflang="x-default" href="https://esra314.github.io/Oberschul-Helfer-Berlin/">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Oberschul-Helfer">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="container">
+<main class="container">
 
-    <h1>🏫 Gymnasium Rechner Berlin</h1>
+    <nav class="sprachleiste" aria-label="Sprache / Language">
+        <span class="sprachleiste-text" data-i18n="lang_available">Diese Seite gibt es in 6 Sprachen:</span>
+        <ul class="sprach-chips" id="sprachChips"></ul>
+    </nav>
 
-    <form id="rechnerForm">
-
-        <h2>Schülerdaten</h2>
-
-        <label>Vorname</label>
-        <input type="text" id="vorname" required>
-
-        <label>Nachname</label>
-        <input type="text" id="nachname" required>
-
-        <h2>5. Klasse (2. Halbjahr)</h2>
-
-        <div class="noten-grid">
-            <input type="number" id="deutsch5" placeholder="Deutsch" min="1" max="6" required>
-            <input type="number" id="mathe5" placeholder="Mathematik" min="1" max="6" required>
-            <input type="number" id="englisch5" placeholder="Englisch" min="1" max="6" required>
-            <input type="number" id="nawi5" placeholder="NaWi" min="1" max="6" required>
-            <input type="number" id="gewi5" placeholder="GeWi" min="1" max="6" required>
-            <input type="number" id="kunst5" placeholder="Kunst" min="1" max="6" required>
-            <input type="number" id="musik5" placeholder="Musik" min="1" max="6" required>
-            <input type="number" id="sport5" placeholder="Sport" min="1" max="6" required>
+    <header class="hero">
+        <div class="c-raster" aria-hidden="true"></div>
+        <div class="hero-text">
+            <h1 class="hero-marke" lang="de">Oberschul-Helfer Berlin</h1>
+            <p class="hero-titel" data-i18n="hero_title">Deine Reise zur Oberschule</p>
+            <p class="hero-unter" data-i18n="hero_sub">Vier Stationen – und du weißt, welche Schulen zu dir passen.</p>
         </div>
-
-        <h2>6. Klasse (1. Halbjahr)</h2>
-
-        <div class="noten-grid">
-            <input type="number" id="deutsch6" placeholder="Deutsch" min="1" max="6" required>
-            <input type="number" id="mathe6" placeholder="Mathematik" min="1" max="6" required>
-            <input type="number" id="englisch6" placeholder="Englisch" min="1" max="6" required>
-            <input type="number" id="nawi6" placeholder="NaWi" min="1" max="6" required>
-            <input type="number" id="gewi6" placeholder="GeWi" min="1" max="6" required>
-            <input type="number" id="kunst6" placeholder="Kunst" min="1" max="6" required>
-            <input type="number" id="musik6" placeholder="Musik" min="1" max="6" required>
-            <input type="number" id="sport6" placeholder="Sport" min="1" max="6" required>
+        <div class="hero-beispiel" aria-hidden="true">
+            <div class="b-ergebnis">
+                <svg viewBox="0 0 120 120" class="b-ring">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#e7edf6" stroke-width="12"/>
+                    <circle class="b-ring-wert" cx="60" cy="60" r="50" fill="none" stroke="#2e7d4f" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="80" transform="rotate(-90 60 60)"/>
+                    <text x="60" y="58" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2933">2,1</text>
+                    <text x="60" y="78" text-anchor="middle" font-size="11" fill="#56616e" data-i18n="hero_avg">Durchschnitt</text>
+                </svg>
+                <div>
+                    <p class="b-badge" data-i18n="hero_possible">Alle Wege führen zum Abitur</p>
+                    <p class="b-klein" data-i18n="hero_example">Beispiel-Ergebnis</p>
+                </div>
+            </div>
+            <ul class="b-schulen" lang="de" dir="ltr">
+                <li><span class="b-punkt gym"></span>Gymnasium <small>Abitur ✓</small></li>
+                <li><span class="b-punkt iss"></span>Integrierte Sekundarschule <small>Abitur ✓</small></li>
+                <li><span class="b-punkt gms"></span>Gemeinschaftsschule <small>Abitur ✓</small></li>
+            </ul>
         </div>
+        <svg class="c-karte" viewBox="0 28 640 202" role="img" data-i18n-aria="hero_map" aria-label="Vier Stationen: Noten, Schulen, Auswahl, Anmeldung">
+            <defs>
+                <linearGradient id="cLinie" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#cffafe"/>
+                    <stop offset="0.5" stop-color="#ffffff"/>
+                    <stop offset="1" stop-color="#fbcfe8"/>
+                </linearGradient>
+                <radialGradient id="cGlow">
+                    <stop offset="0" stop-color="#fff"/>
+                    <stop offset="0.4" stop-color="#67e8f9"/>
+                    <stop offset="1" stop-color="#67e8f9" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+            <path id="cWeg" d="M60 150 C140 110 180 175 245 150 S360 50 420 62 S540 140 590 120" fill="none" stroke="url(#cLinie)" stroke-width="3.5" stroke-linecap="round"/>
+            <a href="#rechner" class="c-station">
+                <circle class="c-ring" cx="60" cy="150" r="27"/>
+                <g class="c-icon" transform="translate(48 138)">
+                    <rect x="0" y="0" width="24" height="24" rx="4"/><path d="M6 6h12M6 12h3M11 12h2M15 12h3M6 18h3M11 18h2M15 18h3"/>
+                </g>
+                <text x="60" y="204" text-anchor="middle" class="c-nr">01</text>
+                <text x="60" y="222" text-anchor="middle" class="c-label" data-i18n="hero_s1">Noten</text>
+            </a>
+            <a href="#schulsuche" class="c-station">
+                <circle class="c-ring" cx="245" cy="150" r="27"/>
+                <g class="c-icon" transform="translate(233 138)">
+                    <path d="M12 23s8-7.5 8-13.5A8 8 0 0 0 4 9.5C4 15.5 12 23 12 23z"/><circle cx="12" cy="9.5" r="3"/>
+                </g>
+                <text x="245" y="204" text-anchor="middle" class="c-nr">02</text>
+                <text x="245" y="222" text-anchor="middle" class="c-label" data-i18n="hero_s2">Schulen</text>
+            </a>
+            <a href="#vergleich" class="c-station">
+                <circle class="c-ring" cx="420" cy="62" r="27"/>
+                <g class="c-icon" transform="translate(408 50)">
+                    <path d="M5 2h14v21l-7-5-7 5z"/>
+                </g>
+                <text x="420" y="116" text-anchor="middle" class="c-nr">03</text>
+                <text x="420" y="134" text-anchor="middle" class="c-label" data-i18n="hero_s3">Auswahl</text>
+            </a>
+            <a href="#ratgeber" class="c-station">
+                <circle class="c-ring" cx="590" cy="120" r="27"/>
+                <g class="c-icon" transform="translate(578 108)">
+                    <rect x="1" y="4" width="22" height="19" rx="3"/><path d="M1 10h22M7 1v6M17 1v6M8 16l3 3 5-6"/>
+                </g>
+                <text x="590" y="174" text-anchor="middle" class="c-nr">04</text>
+                <text x="590" y="192" text-anchor="middle" class="c-label" data-i18n="hero_s4">Anmeldung</text>
+            </a>
+            <circle r="9" fill="url(#cGlow)" class="c-punkt" aria-hidden="true">
+                <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#cWeg"/></animateMotion>
+            </circle>
+        </svg>
+        <div class="c-unten">
+            <a class="c-start" href="#rechnerForm"><span data-i18n="hero_cta">Los geht's: Noten eintragen</span> <span aria-hidden="true">→</span></a>
+            <p class="c-tipp">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+                <span><strong data-i18n="hero_tip_who">Tipp:</strong> <span data-i18n="hero_tip">Leg dein Zeugnis aus Klasse 5 und 6 bereit!</span></span>
+            </p>
+        </div>
+    </header>
 
-        <button type="submit">
-            Durchschnitt berechnen
-        </button>
+    <nav class="hauptmenue nur-bildschirm" id="hauptmenue" data-i18n-aria="nav_label" aria-label="Inhalt">
+        <a href="#rechner"><span class="tab-nr" aria-hidden="true">1</span><span class="tab-text" data-i18n="tab_calc">Noten berechnen</span></a>
+        <a href="#schulsuche"><span class="tab-nr" aria-hidden="true">2</span><span class="tab-text" data-i18n="tab_find">Schulen finden</span></a>
+        <a href="#vergleich"><span class="tab-nr" aria-hidden="true">3</span><span class="tab-text" data-i18n="tab_mine">Meine Auswahl</span><span class="zaehler verborgen" id="merkZaehler"></span></a>
+        <a href="#ratgeber"><span class="tab-nr" aria-hidden="true">4</span><span class="tab-text" data-i18n="tab_guide">Tipps &amp; Termine</span></a>
+        <a href="#fragen"><span class="tab-nr" aria-hidden="true">5</span><span class="tab-text" data-i18n="tab_info">Schul-Infos</span></a>
+    </nav>
+
+    <noscript>
+        <div class="fehler-box">
+            <p lang="de">Bitte aktivieren Sie JavaScript, um den Rechner zu nutzen.</p>
+            <p lang="en">Please turn on JavaScript to use the calculator.</p>
+            <p lang="tr">Hesaplayıcıyı kullanmak için lütfen JavaScript'i açın.</p>
+            <p lang="ar" dir="rtl">يرجى تفعيل JavaScript لاستخدام الحاسبة.</p>
+            <p lang="uk">Будь ласка, увімкніть JavaScript, щоб користуватися калькулятором.</p>
+            <p lang="ru">Пожалуйста, включите JavaScript, чтобы пользоваться калькулятором.</p>
+        </div>
+    </noscript>
+
+    <div id="rechner" class="ansicht">
+    <img class="ansicht-foto nur-bildschirm" src="img/fotos/stifte-bunt.webp" alt="" width="1200" height="675" loading="lazy" decoding="async">
+    <h2 class="ansicht-titel" data-i18n="view_calc">Schritt 1: Noten aus dem Zeugnis eintragen</h2>
+    <p class="hinweis" data-i18n="intro">Tragen Sie die Noten so ein, wie sie im Zeugnis stehen. Fächer und Schularten bleiben auf Deutsch, damit Sie sie im Zeugnis und in Briefen der Schule wiederfinden.</p>
+
+    <form id="rechnerForm" novalidate>
+
+        <fieldset>
+            <legend data-i18n="legend_grades">Zeugnisnoten</legend>
+
+            <label class="fs-wahl">
+                <span data-i18n="fs_label">Welche Sprache ist die 1. Fremdsprache?</span>
+                <select id="fremdsprache-name">
+                    <option>Englisch</option>
+                    <option>Französisch</option>
+                    <option>Spanisch</option>
+                    <option>Italienisch</option>
+                    <option>Polnisch</option>
+                    <option>Portugiesisch</option>
+                    <option>Russisch</option>
+                    <option>Türkisch</option>
+                    <option>Griechisch</option>
+                </select>
+            </label>
+
+            <table class="noten-tabelle">
+                <thead>
+                    <tr>
+                        <th scope="col" data-i18n="col_subject">Fach</th>
+                        <th scope="col"><span class="hj">5/2</span><span class="hj-text" data-i18n="col_52">Zeugnis Klasse 5, 2. Halbjahr</span></th>
+                        <th scope="col"><span class="hj">6/1</span><span class="hj-text" data-i18n="col_61">Zeugnis Klasse 6, 1. Halbjahr</span></th>
+                    </tr>
+                </thead>
+                <tbody id="noten-zeilen"></tbody>
+            </table>
+
+            <p class="klein" data-i18n="optional_hint">Bei Kunst, Musik und Sport können Sie „keine Note“ wählen, wenn im Zeugnis keine Note steht.</p>
+            <p class="klein" data-i18n="tendency_hint">Plus und Minus zählen nicht: 3+ und 3- sind eine 3.</p>
+        </fieldset>
+
+        <div id="fehler" class="fehler-box verborgen" role="alert"></div>
+
+        <div class="knoepfe">
+            <button type="submit" data-i18n="btn_calc">Berechnen</button>
+            <button type="reset" class="zweitrangig" data-i18n="btn_reset">Neu beginnen</button>
+        </div>
 
     </form>
 
-    <div id="ergebnis" class="ergebnis-box verborgen">
-        <h2>Ergebnis</h2>
+    <section id="ergebnis" class="ergebnis verborgen" aria-live="polite" tabindex="-1">
+        <h2 data-i18n="result_title">Ergebnis</h2>
 
-        <p>
-            👤 Schüler:
-            <strong id="schuelerName"></strong>
-        </p>
+        <div class="kennzahlen">
+            <div class="kennzahl">
+                <div class="kennzahl-titel" data-i18n="sum_label">Notensumme</div>
+                <div class="kennzahl-wert" id="notensumme"></div>
+                <p class="klein" data-i18n="sum_hint">Deutsch + Mathematik + 1. Fremdsprache aus beiden Zeugnissen. Bis 14 geht es direkt ans Gymnasium, sonst über den Probeunterricht. ISS und Gemeinschaftsschule stehen immer offen.</p>
+            </div>
+            <div class="kennzahl">
+                <div class="kennzahl-titel" data-i18n="avg_label">Durchschnittsnote</div>
+                <div class="kennzahl-wert" id="durchschnitt"></div>
+                <p class="gerundet" data-i18n="avg_cut">Eine Stelle nach dem Komma, nicht gerundet (wie amtlich)</p>
+                <p class="klein" data-i18n="avg_hint">Alle Fächer. Deutsch, Mathematik, 1. Fremdsprache, Naturwissenschaften und Gesellschaftswissenschaften zählen doppelt. Diese Note entscheidet nicht über die Eignung. Sie wird nur genutzt, wenn sich an einer Schule mehr Kinder anmelden, als es Plätze gibt.</p>
+            </div>
+        </div>
 
-        <p>
-            📊 Durchschnitt:
-            <strong id="durchschnitt"></strong>
-        </p>
+        <p class="ergebnis-lob" data-i18n="result_cheer">Stark gemacht! Mit deinem Zeugnis stehen dir alle drei Schularten offen – und alle führen zum Abitur. Wähle die Schule, an der du dich wohlfühlst und deine Stärken zeigen kannst.</p>
+        <h3 data-i18n="schools_title">Deine Wege zum Abitur</h3>
+        <ul class="schularten">
+            <li class="schulart" id="karte-gym">
+                <div class="schulart-kopf">
+                    <strong class="art-gym">Gymnasium</strong>
+                    <span class="status" id="status-gym"></span>
+                </div>
+                <p data-i18n="desc_gym">Abitur nach Klasse 12, in schnellerem Lerntempo.</p>
+            </li>
+            <li class="schulart ok" id="karte-iss">
+                <div class="schulart-kopf">
+                    <strong class="art-iss">Integrierte Sekundarschule (ISS)</strong>
+                    <span class="status" data-i18n="status_yes">möglich</span>
+                </div>
+                <p data-i18n="desc_iss">Alle Abschlüsse bis zum Abitur nach Klasse 13 – mit mehr Zeit für Projekte, Praxis und eigene Stärken.</p>
+            </li>
+            <li class="schulart ok" id="karte-gms">
+                <div class="schulart-kopf">
+                    <strong class="art-gms">Gemeinschaftsschule</strong>
+                    <span class="status" data-i18n="status_yes">möglich</span>
+                </div>
+                <p data-i18n="desc_gms">Gemeinsam lernen bis zum Abschluss – alle Abschlüsse bis zum Abitur nach Klasse 13.</p>
+            </li>
+        </ul>
 
-        <p>
-            📚 Hauptfachsumme:
-            <strong id="hauptfachsumme"></strong>
-        </p>
+        <div id="probe" class="info-box verborgen">
+            <h3 data-i18n="probe_title">Wunsch Gymnasium? So geht es</h3>
+            <p data-i18n="probe_text">Die Notensumme liegt über 14. Wenn Ihr Kind gern an ein Gymnasium möchte, geht das über den Probeunterricht. Die Anmeldung ist freiwillig und läuft über die Grundschule. Geprüft werden Deutsch, Mathematik und fachübergreifende Fähigkeiten. Die Fristen stehen auf der offiziellen Seite.</p>
+        </div>
 
-        <p>
-            🎯 Empfehlung:
-            <strong id="empfehlung"></strong>
-        </p>
+        <details class="rechenweg">
+            <summary data-i18n="details_title">So wurde gerechnet</summary>
+            <p id="rechenweg-summe"></p>
+            <p id="rechenweg-schnitt"></p>
+        </details>
+
+        <div class="knoepfe">
+            <button type="button" id="drucken" class="zweitrangig" data-i18n="btn_print">Als PDF speichern oder drucken</button>
+        </div>
+        <p class="klein nur-bildschirm" data-i18n="pdf_hint">Tipp: Im Druckfenster können Sie „Als PDF speichern“ wählen.</p>
+        <a class="weiter nur-bildschirm" href="#schulsuche" data-i18n="next_find">Weiter: Passende Schulen finden</a>
+    </section>
     </div>
 
-</div>
+    <section id="schulsuche" class="abschnitt ansicht">
+    <img class="ansicht-foto nur-bildschirm" src="img/fotos/berlin-fernsehturm.webp" alt="" width="1200" height="800" loading="lazy" decoding="async">
+        <h2 data-i18n="near_title">Schulen in der Nähe</h2>
+        <p data-i18n="near_intro">Geben Sie Ihre Postleitzahl ein. Sie sehen dann Schulen in Ihrer Umgebung, passend zum Ergebnis.</p>
 
+        <form id="sucheForm" class="suche" novalidate>
+            <div class="suche-zeile">
+                <label class="feld">
+                    <span data-i18n="plz_label">Postleitzahl</span>
+                    <input id="plz" type="text" inputmode="numeric" autocomplete="postal-code"
+                           maxlength="5" pattern="[0-9]{5}" placeholder="10115" dir="ltr">
+                </label>
+                <label class="feld">
+                    <span data-i18n="radius_label">Umkreis</span>
+                    <select id="radius" dir="ltr">
+                        <option value="2">2 km</option>
+                        <option value="3">3 km</option>
+                        <option value="5" selected>5 km</option>
+                        <option value="10">10 km</option>
+                    </select>
+                </label>
+            </div>
+
+            <fieldset class="filter">
+                <legend data-i18n="types_label">Schularten</legend>
+                <label class="schalter art-gym"><input type="checkbox" name="art" value="gym" checked> Gymnasium</label>
+                <label class="schalter art-iss"><input type="checkbox" name="art" value="iss" checked> Integrierte Sekundarschule (ISS)</label>
+                <label class="schalter art-gms"><input type="checkbox" name="art" value="gms" checked> Gemeinschaftsschule</label>
+                <label class="schalter"><input type="checkbox" id="privat" checked> <span data-i18n="private_label">Auch Privatschulen anzeigen</span></label>
+            </fieldset>
+            <p id="gym-hinweis" class="klein hinweis-orange verborgen"></p>
+
+            <div class="knoepfe">
+                <button type="submit" data-i18n="btn_search">Schulen suchen</button>
+            </div>
+            <p class="klein" data-i18n="near_privacy">Die Postleitzahl wird nicht gespeichert und nicht gesendet. Die Suche läuft nur auf Ihrem Gerät.</p>
+        </form>
+
+        <div id="sucheFehler" class="fehler-box verborgen" role="alert"></div>
+
+        <div id="sucheErgebnis" class="verborgen" aria-live="polite">
+            <p id="trefferAnzahl" class="treffer-anzahl"></p>
+            <p class="klein hinweis-blau" data-i18n="open_day_hint">Tag der offenen Tür und Infoabende: bitte auf der Webseite der Schule prüfen.</p>
+
+            <div class="liste-karte-schalter nur-bildschirm" role="group" data-i18n-aria="view_switch" aria-label="Ansicht: Liste oder Karte">
+                <button type="button" id="zeigeListe" aria-pressed="true"><span aria-hidden="true">📋</span> <span data-i18n="view_list">Liste</span></button>
+                <button type="button" id="zeigeKarte" aria-pressed="false"><span aria-hidden="true">🗺️</span> <span data-i18n="view_map">Karte</span></button>
+            </div>
+
+            <div id="karteBereich" class="karte-bereich nur-bildschirm verborgen">
+                <div id="karteHinweis" class="karte-einwilligung">
+                    <p class="karte-einwilligung-titel" data-i18n="map_consent_title">Schulen auf der Karte ansehen</p>
+                    <button type="button" id="karteLaden" data-i18n="btn_map">Karte anzeigen</button>
+                    <p class="klein" data-i18n="map_notice">Die Karte lädt Kartenbilder von OpenStreetMap. Dabei werden Ihre IP-Adresse und der Kartenausschnitt an OpenStreetMap übertragen.</p>
+                </div>
+                <div id="karte" class="karte verborgen"></div>
+                <p class="karte-legende">
+                    <span class="punkt punkt-gym" aria-hidden="true"></span><span lang="de" class="art-gym">Gymnasium</span>
+                    <span class="punkt punkt-iss" aria-hidden="true"></span><span lang="de" class="art-iss">Integrierte Sekundarschule (ISS)</span>
+                    <span class="punkt punkt-gms" aria-hidden="true"></span><span lang="de" class="art-gms">Gemeinschaftsschule</span>
+                    <span class="punkt punkt-du" aria-hidden="true"></span><span data-i18n="map_you">Mitte Ihres Postleitzahl-Gebiets</span>
+                </p>
+            </div>
+
+            <div id="listeBereich">
+
+            <ol id="schulListe" class="schul-liste"></ol>
+            <button type="button" id="mehrSchulen" class="zweitrangig verborgen" data-i18n="show_more">Weitere Schulen anzeigen</button>
+            </div>
+        </div>
+
+        <p id="datenquelle" class="klein"></p>
+        <a class="weiter nur-bildschirm" href="#vergleich" data-i18n="next_mine">Weiter: Gemerkte Schulen vergleichen</a>
+    </section>
+
+    <section id="vergleich" class="abschnitt ansicht">
+    <img class="ansicht-foto nur-bildschirm" src="img/fotos/berlin-dom-baeume.webp" alt="" width="1200" height="675" loading="lazy" decoding="async">
+        <h2 data-i18n="compare_title">Meine Schulen vergleichen</h2>
+        <p id="vergleichLeer" class="klein" data-i18n="compare_empty">Noch keine Schule gemerkt. Klicken Sie in der Schulliste auf „Merken“.</p>
+        <div id="vergleichBereich" class="verborgen">
+            <div class="tabelle-scroll">
+                <table id="vergleichTabelle" class="vergleich-tabelle"></table>
+            </div>
+            <p id="vergleichLegende" class="klein"></p>
+            <div class="knoepfe nur-bildschirm">
+                <button type="button" id="vergleichLeeren" class="zweitrangig" data-i18n="compare_clear">Alle löschen</button>
+            </div>
+        </div>
+        <p class="klein" data-i18n="compare_storage">Gemerkte Schulen und Notizen werden nur in diesem Browser gespeichert und nicht gesendet.</p>
+        <a class="weiter nur-bildschirm" href="#ratgeber" data-i18n="next_guide">Weiter: Tipps und Termine</a>
+    </section>
+
+    <div id="ratgeber" class="ansicht">
+    <img class="ansicht-foto nur-bildschirm" src="img/fotos/berlin-dom.webp" alt="" width="1200" height="800" loading="lazy" decoding="async">
+
+    <section id="checkliste" class="abschnitt">
+        <div class="ratgeber-karten">
+            <div class="ratgeber-karte">
+                <h2 data-i18n="guide_title">Checkliste für die Schulwahl</h2>
+                <ul class="haken-liste">
+                <li data-i18n="guide_1">Fremdsprachen: Welche Sprachen gibt es, und ab wann eine zweite Fremdsprache?</li>
+                <li data-i18n="guide_2">Ganztag: Gibt es Unterricht und Angebote bis in den Nachmittag?</li>
+                <li data-i18n="guide_3">Profil: Hat die Schule einen Schwerpunkt, zum Beispiel MINT, Musik, Sport oder bilingual?</li>
+                <li data-i18n="guide_4">Schulweg: Wie lange dauert der Weg zu Fuß, mit dem Fahrrad, mit Bus oder Bahn?</li>
+                <li data-i18n="guide_5">Mittagessen: Gibt es eine Mensa oder ein warmes Mittagessen?</li>
+                </ul>
+            </div>
+            <div class="ratgeber-karte">
+                <h2 data-i18n="q_title">5 Fragen für den Tag der offenen Tür</h2>
+                <ol class="fragen-liste">
+                <li data-i18n="q_1">Welche Fremdsprachen gibt es ab Klasse 7, und wann beginnt die zweite Fremdsprache?</li>
+                <li data-i18n="q_2">Wie sieht ein normaler Schultag aus, und wie lange dauert er?</li>
+                <li data-i18n="q_3">Welche Schwerpunkte, AGs und Projekte gibt es?</li>
+                <li data-i18n="q_4">Wie werden Kinder unterstützt, die Hilfe brauchen, und wie werden starke Kinder gefördert?</li>
+                <li data-i18n="q_5">Wie viele Anmeldungen gab es letztes Jahr, und wie viele Plätze gibt es in Klasse 7?</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section id="termine" class="abschnitt termine">
+        <h2 data-i18n="dates_title">Wichtige Termine für den Wechsel 2027</h2>
+        <div class="nicht-verpassen">
+            <h3 data-i18n="dont_miss_title">Nicht verpassen!</h3>
+            <p data-i18n="dont_miss_text">Fast alle Oberschulen laden zum Tag der offenen Tür oder zu Infoabenden ein, meist zwischen November und Januar. Dort lernen Sie die Schule kennen und können Fragen stellen. Die Termine stehen auf der Webseite der Schule. Sie können die Schule auch anrufen.</p>
+        </div>
+        <ul id="terminListe" class="termin-liste"></ul>
+        <p class="klein" data-i18n="dates_note">Bitte prüfen Sie die Termine auf der offiziellen Seite. Sie können sich ändern.</p>
+        <a class="weiter nur-bildschirm" href="#fragen" data-i18n="next_info">Weiter: Infos zu den Schularten</a>
+    </section>
+    </div>
+
+    <section id="fragen" class="abschnitt faq ansicht nur-bildschirm">
+    <img class="ansicht-foto nur-bildschirm" src="img/fotos/berlin-stadt.webp" alt="" width="1200" height="764" loading="lazy" decoding="async">
+        <h2 data-i18n="faq_title">Gut zu wissen: Oberschulen in Berlin</h2>
+        <p class="hinweis" data-i18n="info_intro">Was ist was? Hier finden Sie kurz erklärt die Schularten, Abschlüsse und Begriffe, die Ihnen bei der Schulwahl begegnen.</p>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q7">Was ist ein Gymnasium?</summary>
+                <p data-i18n="faq_a7">Das Gymnasium führt in 6 Jahren (Klasse 7 bis 12) zum Abitur. Das Lerntempo ist höher, und ab Klasse 7 lernen alle Kinder eine zweite Fremdsprache. Das erste Jahr ist ein Probejahr. Danach geht es am Gymnasium weiter oder an einer ISS oder Gemeinschaftsschule, die genauso zum Abitur führen.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q1">Was ist eine Integrierte Sekundarschule (ISS)?</summary>
+                <p data-i18n="faq_a1">Die ISS führt zu allen Schulabschlüssen: Berufsbildungsreife, Mittlerer Schulabschluss und Abitur. Das Abitur macht man nach Klasse 13, also mit einem Jahr mehr Zeit als am Gymnasium. Viele ISS haben eine eigene gymnasiale Oberstufe oder arbeiten mit einer zusammen.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q2">Was ist eine Gemeinschaftsschule?</summary>
+                <p data-i18n="faq_a2">An der Gemeinschaftsschule lernen alle Kinder gemeinsam, oft von Klasse 1 bis 10 oder bis zum Abitur. Sie führt wie die ISS zu allen Schulabschlüssen, das Abitur nach Klasse 13.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q3">Wie läuft der Probeunterricht ab?</summary>
+                <p data-i18n="faq_a3">Der Probeunterricht ist für Kinder, die sich das Gymnasium wünschen und eine Notensumme über 14 haben. Die Anmeldung ist freiwillig und läuft über die Grundschule. An einem Tag gibt es schriftliche Aufgaben in Deutsch und Mathematik, dazu werden fachübergreifende Fähigkeiten angeschaut. Wer besteht, kann sich am Gymnasium anmelden.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q4">Welche Schule passt zu meinem Kind?</summary>
+                <p data-i18n="faq_a4">Wichtig sind nicht nur die Noten. Denken Sie an das Lerntempo, die Interessen und Stärken Ihres Kindes, den Schulweg, Ganztagsangebote und Sprachen. Besuchen Sie den Tag der offenen Tür und sprechen Sie mit der Lehrkraft Ihres Kindes.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q5">Kann mein Kind auch an einer ISS oder Gemeinschaftsschule Abitur machen?</summary>
+                <p data-i18n="faq_a5">Ja. Beide Schularten führen zum Abitur, nach Klasse 13. Das zusätzliche Jahr gibt mehr Zeit zum Lernen, für Projekte und Praxis – viele Jugendliche erreichen so ihr bestes Ergebnis.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q8">Was bedeutet Ganztag?</summary>
+                <p data-i18n="faq_a8">Gebundener Ganztag: Unterricht und Angebote gehen an mehreren Tagen bis in den Nachmittag, für alle Kinder verbindlich. Teilgebundener Ganztag: nur an einigen Tagen verbindlich. Offener Ganztag: Nachmittagsangebote sind freiwillig. Bei „Details“ in der Schulliste steht, was die Schule anbietet.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q9">Was bedeuten Profil, bilingual und Europa-Schule?</summary>
+                <p data-i18n="faq_a9">Ein Profil ist ein Schwerpunkt der Schule, zum Beispiel Musik, Sport, MINT (Mathematik, Naturwissenschaften) oder Sprachen. Bilingual heißt: Einige Fächer werden in einer Fremdsprache unterrichtet. An einer Staatlichen Europa-Schule Berlin lernen Kinder in zwei Sprachen, zum Beispiel Deutsch und Spanisch.</p>
+            </details>
+            <details class="faq-eintrag">
+                <summary data-i18n="faq_q6">Im Zeugnis fehlt eine Note oder steht etwas anderes?</summary>
+                <p data-i18n="faq_a6">Zum Beispiel eine Zwischennote wie „2-3“, ein anderes Fach oder ein Zeugnis aus einem anderen Bundesland oder Land. Dann gelten Sonderregeln. Die Grundschule berät Sie und berechnet die Förderprognose. Diese Seite kann solche Fälle nicht genau berechnen.</p>
+            </details>
+    </section>
+
+    <aside class="fuss-hinweise">
+        <p data-i18n="disclaimer">Unverbindliche Berechnung, ohne Gewähr. Verbindlich ist nur die Förderprognose der Grundschule. Stand der Regeln: November 2026.</p>
+        <p data-i18n="privacy_note">Ihre Eingaben bleiben auf Ihrem Gerät. Nichts wird gesendet oder gespeichert.</p>
+        <p lang="de">Datenquellen: Schulen – Geoportal Berlin (dl-de/zero-2-0); Postleitzahlen – Amt für Statistik Berlin-Brandenburg 2026 / Postleitzahlen (<a href="https://creativecommons.org/licenses/by/3.0/de/" target="_blank" rel="noopener">CC BY 3.0 DE</a>); Schulangebote – <a href="https://www.bildung.berlin.de/Schulverzeichnis/" target="_blank" rel="noopener">Berliner Schulverzeichnis</a>; Termine – <a href="https://www.berlin.de/land/kalender/index.php?c=79" target="_blank" rel="noopener">Kalender der Senatsverwaltung für Bildung, Jugend und Familie</a> (ohne Gewähr, bitte bei der Schule prüfen) und Websites der Schulen; Karte – © OpenStreetMap-Mitwirkende; Fotos – <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, gemeinfrei (CC0), Liste in <a href="img/fotos/QUELLEN.md" target="_blank" rel="noopener">QUELLEN.md</a>.</p>
+        <p>
+            <a href="https://www.berlin.de/sen/bildung/schule/bildungswege/uebergang-weiterfuehrende-schule/wechsel-zur-7-klasse/"
+               target="_blank" rel="noopener" data-i18n="official_link">Offizielle Informationen der Senatsverwaltung für Bildung</a>
+        </p>
+    </aside>
+
+</main>
+
+<footer class="seitenfuss">
+    <a href="impressum.html" data-i18n="footer_imprint">Impressum</a>
+    <a href="datenschutz.html" data-i18n="footer_privacy">Datenschutz</a>
+</footer>
+
+<script src="vendor/leaflet/leaflet.js" defer></script>
+<script src="data/schulen.js"></script>
+<script src="data/schulinfos.js"></script>
+<script src="js/rechner.js"></script>
+<script src="js/umkreis.js"></script>
+<script src="js/merkliste.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 
 </body>

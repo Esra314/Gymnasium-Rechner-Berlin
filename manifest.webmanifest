@@ -1,0 +1,19 @@
+{
+  "name": "Oberschul-Helfer Berlin",
+  "short_name": "Oberschul-Helfer",
+  "description": "Von der Grundschule zur Oberschule: Notensumme und Durchschnitt aus Klasse 5 und 6 berechnen, Gymnasium, ISS und Gemeinschaftsschule in der Nähe finden.",
+  "lang": "de",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#7469B6",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
