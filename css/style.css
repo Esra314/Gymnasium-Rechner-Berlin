@@ -1722,3 +1722,24 @@ body {
         height: 62vh;
     }
 }
+
+/* Amtliche Angaben in der Checkliste: nur lesen */
+.check-amtlich {
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--blau-hell);
+    border: 1px solid var(--rand);
+}
+
+.check-amtlich .amtlich-wert {
+    font-weight: 400;
+    font-size: 0.95rem;
+    margin: 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.check-amtlich small {
+    font-weight: 400;
+    color: var(--text-leise);
+}

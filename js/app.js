@@ -519,25 +519,6 @@
         return "";
     }
 
-    // Vorschlag für die Checkliste, solange die Familie selbst nichts eingetragen hat
-    function vorschlag(s, feld) {
-        var info = schulinfos[s.id];
-        if (!info) return "";
-        if (feld === "ganztag") {
-            if (info.gt === "gebunden") return "ja";
-            return info.gt ? "teilweise" : "";
-        }
-        if (feld === "essen") {
-            if (!info.me) return "";
-            return /keine/i.test(info.me) ? "nein" : "ja";
-        }
-        if (feld === "tdot") {
-            var naechster = kommendeTermine(s)[0];
-            return naechster ? terminText(naechster) : "";
-        }
-        return amtlich(s, feld);
-    }
-
     function neuerLink(href, text) {
         var a = document.createElement("a");
         a.href = href;
@@ -710,6 +691,26 @@
         raster.className = "check-raster";
         var vorausgefuellt = false;
         window.Merkliste.FELDER.forEach(function (feld) {
+            var offiziell = feld === "notizen" ? "" : amtlich(s, feld);
+            if (offiziell) {
+                // Amtliche Angabe: nur anzeigen, nicht änderbar
+                vorausgefuellt = true;
+                var feldBox = document.createElement("div");
+                feldBox.className = "check-feld check-amtlich";
+                var titel = document.createElement("span");
+                titel.textContent = t(FELD_TEXT[feld]);
+                var wert = document.createElement("p");
+                wert.className = "amtlich-wert";
+                wert.dir = "auto";
+                wert.textContent = offiziell;
+                var quelle = document.createElement("small");
+                quelle.textContent = "🔒 " + t("sv_mark");
+                feldBox.appendChild(titel);
+                feldBox.appendChild(wert);
+                feldBox.appendChild(quelle);
+                raster.appendChild(feldBox);
+                return;
+            }
             var label = document.createElement("label");
             label.className = "check-feld";
             var span = document.createElement("span");
@@ -731,18 +732,10 @@
                 eingabe = document.createElement("input");
                 eingabe.type = "text";
             }
-            var eigene = merkliste.notiz(s.id, feld);
-            var vorschlagWert = eigene ? "" : vorschlag(s, feld);
-            eingabe.value = eigene || vorschlagWert;
-            if (vorschlagWert) {
-                vorausgefuellt = true;
-                label.classList.add("vorausgefuellt");
-                eingabe.title = t("sv_mark");
-            }
+            eingabe.value = merkliste.notiz(s.id, feld);
             eingabe.maxLength = 2000;
             eingabe.addEventListener("change", function () {
                 merkliste.setzeNotiz(s.id, feld, eingabe.value);
-                label.classList.remove("vorausgefuellt");
                 zeigeVergleich();
             });
             label.appendChild(eingabe);
@@ -812,10 +805,8 @@
         ];
         window.Merkliste.FELDER.forEach(function (feld) {
             zeilen.push([FELD_TEXT[feld], function (s) {
-                var eigene = merkliste.notiz(s.id, feld);
-                if (eigene) return wertAnzeige(feld, eigene);
-                var offiziell = amtlich(s, feld);
-                if (!offiziell) return "–";
+                var offiziell = feld === "notizen" ? "" : amtlich(s, feld);
+                if (!offiziell) return wertAnzeige(feld, merkliste.notiz(s.id, feld));
                 var span = document.createElement("span");
                 span.className = "amtlich";
                 span.title = t("sv_mark");
